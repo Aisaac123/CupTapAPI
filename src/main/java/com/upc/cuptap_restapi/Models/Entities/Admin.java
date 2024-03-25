@@ -1,8 +1,6 @@
 package com.upc.cuptap_restapi.Models.Entities;
 
-import com.upc.cuptap_restapi.Models.Interface.CrudEntity;
 import com.upc.cuptap_restapi.Models.Interface.ReadEntity;
-import com.upc.cuptap_restapi.Models.Interface.UpdateEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

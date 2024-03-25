@@ -18,10 +18,10 @@ import java.util.Optional;
 @Service
 public class UService<E extends UpdateEntity, ID extends Comparable<ID>> implements IUService<E, ID> {
 
+    private static UService<?, ?> _instance;
     private GlobalRepository<E, ID> repository;
 
-    private static UService<?, ?> _instance;
-    public static <E extends UpdateEntity, ID extends Comparable<ID>> UService<E, ID> GetInstance(){
+    public static <E extends UpdateEntity, ID extends Comparable<ID>> UService<E, ID> GetInstance() {
         if (_instance == null) _instance = new UService<>();
         return (UService<E, ID>) _instance;
     }
@@ -30,6 +30,7 @@ public class UService<E extends UpdateEntity, ID extends Comparable<ID>> impleme
         this.repository = repository;
         return this;
     }
+
     @Override
     public Response<Map<String, E>> Update(E entity, ID old_id) {
         try {
@@ -44,7 +45,7 @@ public class UService<E extends UpdateEntity, ID extends Comparable<ID>> impleme
                 repository.save(ent);
                 return new ResponseBuilder<Map<String, E>>().withData(map);
             }
-            return ResponseBuilder.Fail("No se ha encontrado el id al actualizar");
+            return ResponseBuilder.Fail("No se ha encontrado el item a actualizar");
 
         } catch (Exception e) {
             return ResponseBuilder.Error(e);

@@ -1,7 +1,6 @@
 package com.upc.cuptap_restapi.Services.General.GenericServices.Intefaces;
 
 
-
 import com.upc.cuptap_restapi.Models.Interface.ReadEntity;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
 import org.springframework.data.domain.Page;

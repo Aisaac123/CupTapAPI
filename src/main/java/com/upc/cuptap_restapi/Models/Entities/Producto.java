@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.util.Lazy;
 
 import java.util.List;
 
@@ -42,6 +41,7 @@ public class Producto implements CrudEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_promocion")
     Promocion promocion;
+
     @Override
     public UpdateEntity cloneEntity() {
         return null;

@@ -10,22 +10,25 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class ResponseBuilder<T> extends Response<T> {
 
-    public static <T> Response<T> Error(@NotNull Exception exception){
+    public static <T> Response<T> Error(@NotNull Exception exception) {
         return (Response<T>) new ResponseBuilder().withMsg(exception.getMessage()).withSuccess(false);
     }
-    public static <T> Response<T> Fail(String fail_message){
+
+    public static <T> Response<T> Fail(String fail_message) {
         return (Response<T>) new ResponseBuilder().withMsg(fail_message).withSuccess(false);
     }
 
-    public ResponseBuilder<T> withMsg(String value){
+    public ResponseBuilder<T> withMsg(String value) {
         msg = value;
         return this;
     }
-    public ResponseBuilder<T> withData(T value){
+
+    public ResponseBuilder<T> withData(T value) {
         data = value;
         return this;
     }
-    public ResponseBuilder<T> withSuccess(boolean value){
+
+    public ResponseBuilder<T> withSuccess(boolean value) {
         success = value;
         return this;
     }

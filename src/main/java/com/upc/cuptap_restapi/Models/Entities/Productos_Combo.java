@@ -3,7 +3,10 @@ package com.upc.cuptap_restapi.Models.Entities;
 import com.upc.cuptap_restapi.Models.Interface.CrudEntity;
 import com.upc.cuptap_restapi.Models.Interface.UpdateEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Entity(name = "Productos_del_combo")
@@ -26,6 +29,7 @@ public class Productos_Combo implements CrudEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "nombre_combo")
     Combo combo;
+
     @Override
     public UpdateEntity cloneEntity() {
         return null;

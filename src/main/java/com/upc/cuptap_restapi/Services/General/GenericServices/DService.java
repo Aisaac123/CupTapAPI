@@ -17,16 +17,12 @@ import java.util.List;
 public class DService<E extends DeleteEnity, ID extends Comparable<ID>> implements IDService<E, ID> {
 
     private GlobalRepository<E, ID> repository;
-    private static DService<?, ?> _instance;
-    public static <E extends DeleteEnity, ID extends Comparable<ID>> DService<E, ID> GetInstance(){
-        if (_instance == null) _instance = new DService<E, ID>();
-        return (DService<E, ID>) _instance;
-    }
 
     public DService<E, ID> setRepository(GlobalRepository<E, ID> repository) {
         this.repository = repository;
         return this;
     }
+
     @Override
     public Response<E> Delete(ID id) {
         try {

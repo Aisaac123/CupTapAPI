@@ -22,16 +22,11 @@ public class CService<E extends CreateEntity, ID extends Comparable<ID>> impleme
 
     private GlobalRepository<E, ID> repository;
 
-    private static CService<?, ?> _instance;
-    public static <E extends CreateEntity, ID extends Comparable<ID>> CService<E, ID> GetInstance(){
-        if (_instance == null) _instance = new CService<E, ID>();
-        return (CService<E, ID>) _instance;
-    }
-
     public CService<E, ID> setRepository(GlobalRepository<E, ID> repository) {
         this.repository = repository;
         return this;
     }
+
     @Override
     public Response<E> Save(E entity) {
         try {

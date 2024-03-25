@@ -1,7 +1,7 @@
 package com.upc.cuptap_restapi.Services.Service;
 
-import com.upc.cuptap_restapi.Models.Entities.Usuario;
-import com.upc.cuptap_restapi.Repository.DAO.UsuarioDAO;
+import com.upc.cuptap_restapi.Models.Entities.Producto;
+import com.upc.cuptap_restapi.Repository.DAO.ProductoDAO;
 import com.upc.cuptap_restapi.Services.General.GenericServices.CService;
 import com.upc.cuptap_restapi.Services.General.GenericServices.DService;
 import com.upc.cuptap_restapi.Services.General.GenericServices.RService;
@@ -10,36 +10,32 @@ import com.upc.cuptap_restapi.Services.General.Instances.CRUDServiceInstance;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UsuarioService implements CRUDServiceInstance<Usuario, String> {
+public class ProductoService implements CRUDServiceInstance<Producto, String> {
 
-    private final UsuarioDAO rep;
+    final
+    ProductoDAO rep;
 
-    public UsuarioService(UsuarioDAO repository) {
-        rep = repository;
-    }
-
-    public boolean getName() {
-        return Read().GetAll().isSuccess();
+    public ProductoService(ProductoDAO rep) {
+        this.rep = rep;
     }
 
     @Override
-    public CService<Usuario, String> Persist() {
+    public CService<Producto, String> Persist() {
         return new CService<>(rep);
     }
 
     @Override
-    public DService<Usuario, String> Remove() {
+    public DService<Producto, String> Remove() {
         return new DService<>(rep);
     }
 
     @Override
-    public RService<Usuario, String> Read() {
+    public RService<Producto, String> Read() {
         return new RService<>(rep);
     }
 
     @Override
-    public UService<Usuario, String> Modify() {
+    public UService<Producto, String> Modify() {
         return new UService<>(rep);
     }
 }
-

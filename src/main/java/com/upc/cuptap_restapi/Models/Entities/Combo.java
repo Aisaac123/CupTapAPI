@@ -4,9 +4,7 @@ import com.upc.cuptap_restapi.Models.Interface.CrudEntity;
 import com.upc.cuptap_restapi.Models.Interface.UpdateEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
 

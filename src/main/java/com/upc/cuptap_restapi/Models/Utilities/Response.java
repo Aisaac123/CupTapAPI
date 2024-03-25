@@ -1,6 +1,8 @@
 package com.upc.cuptap_restapi.Models.Utilities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor()
 @AllArgsConstructor()

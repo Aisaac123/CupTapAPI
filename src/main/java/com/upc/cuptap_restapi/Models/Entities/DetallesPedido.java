@@ -36,6 +36,7 @@ public class DetallesPedido implements CrudEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "producto_nombre")
     Producto producto;
+
     @Override
     public UpdateEntity cloneEntity() {
         //TODO completar metodo

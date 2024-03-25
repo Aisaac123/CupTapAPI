@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,6 +48,7 @@ public class Promocion implements CrudEntity {
     @Setter
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "promocion")
     List<Combo> combos;
+
     @Override
     public UpdateEntity cloneEntity() {
         try {

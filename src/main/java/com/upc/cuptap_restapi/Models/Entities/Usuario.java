@@ -3,9 +3,11 @@ package com.upc.cuptap_restapi.Models.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.upc.cuptap_restapi.Models.Interface.CrudEntity;
 import com.upc.cuptap_restapi.Models.Interface.UpdateEntity;
-import com.upc.cuptap_restapi.Models.Utilities.Response;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -35,13 +37,14 @@ public class Usuario implements CrudEntity {
     String password;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-            @JsonIgnore
+    @JsonIgnore
     List<Pedido> pedidos;
+
     @Override
     public UpdateEntity cloneEntity() {
         try {
             return (Usuario) this.clone();
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
