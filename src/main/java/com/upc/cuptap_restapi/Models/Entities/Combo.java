@@ -1,7 +1,7 @@
 package com.upc.cuptap_restapi.Models.Entities;
 
-import com.upc.cuptap_restapi.Models.Interface.CrudEntity;
-import com.upc.cuptap_restapi.Models.Interface.UpdateEntity;
+import com.upc.cuptap_restapi.Models.Interfaces.CrudEntity;
+import com.upc.cuptap_restapi.Models.Interfaces.UpdateEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

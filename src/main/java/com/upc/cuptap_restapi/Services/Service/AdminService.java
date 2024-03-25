@@ -1,9 +1,9 @@
 package com.upc.cuptap_restapi.Services.Service;
 
 import com.upc.cuptap_restapi.Models.Entities.Admin;
-import com.upc.cuptap_restapi.Repository.DAO.AdminDAO;
-import com.upc.cuptap_restapi.Services.General.GenericServices.RService;
-import com.upc.cuptap_restapi.Services.General.Instances.RServiceInstance;
+import com.upc.cuptap_restapi.Repositories.DAO.AdminDAO;
+import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements.RService;
+import com.upc.cuptap_restapi.Services.DataAccess.DASIntances.RServiceInstance;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,4 +19,6 @@ public class AdminService implements RServiceInstance<Admin, String> {
     public RService<Admin, String> Read() {
         return new RService<>(rep);
     }
+
+
 }

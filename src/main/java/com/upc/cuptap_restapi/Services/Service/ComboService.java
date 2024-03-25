@@ -1,12 +1,12 @@
 package com.upc.cuptap_restapi.Services.Service;
 
 import com.upc.cuptap_restapi.Models.Entities.Combo;
-import com.upc.cuptap_restapi.Repository.DAO.ComboDAO;
-import com.upc.cuptap_restapi.Services.General.GenericServices.CService;
-import com.upc.cuptap_restapi.Services.General.GenericServices.DService;
-import com.upc.cuptap_restapi.Services.General.GenericServices.RService;
-import com.upc.cuptap_restapi.Services.General.GenericServices.UService;
-import com.upc.cuptap_restapi.Services.General.Instances.CRUDServiceInstance;
+import com.upc.cuptap_restapi.Repositories.DAO.ComboDAO;
+import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements.CService;
+import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements.DService;
+import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements.RService;
+import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements.UService;
+import com.upc.cuptap_restapi.Services.DataAccess.DASIntances.CRUDServiceInstance;
 import org.springframework.stereotype.Service;
 
 @Service
