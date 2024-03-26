@@ -4,7 +4,6 @@ import com.upc.cuptap_restapi.Controllers.DataAccess.DAInterfaces.IUController;
 import com.upc.cuptap_restapi.Models.Interfaces.UpdateEntity;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
 import com.upc.cuptap_restapi.Models.Utilities.ResponseBuilder;
-import com.upc.cuptap_restapi.Services.DataAccess.DASIntances.UServiceInstance;
 import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Intefaces.IUService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

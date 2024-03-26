@@ -4,8 +4,6 @@ import com.upc.cuptap_restapi.Controllers.DataAccess.DAInterfaces.IRController;
 import com.upc.cuptap_restapi.Models.Interfaces.ReadEntity;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
 import com.upc.cuptap_restapi.Models.Utilities.ResponseBuilder;
-import com.upc.cuptap_restapi.Services.DataAccess.DASIntances.RServiceInstance;
-import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements.RService;
 import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Intefaces.IRService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 public class RController<E extends ReadEntity, ID extends Comparable<ID>> implements IRController<E, ID> {

@@ -4,7 +4,6 @@ import com.upc.cuptap_restapi.Controllers.DataAccess.DAInterfaces.ICController;
 import com.upc.cuptap_restapi.Models.Interfaces.CreateEntity;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
 import com.upc.cuptap_restapi.Models.Utilities.ResponseBuilder;
-import com.upc.cuptap_restapi.Services.DataAccess.DASIntances.CServiceInstance;
 import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Intefaces.ICService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -25,7 +24,7 @@ public class CController<E extends CreateEntity, ID extends Comparable<ID>> impl
         return this;
     }
 
-    @PostMapping("/add")
+    @PostMapping("")
     public ResponseEntity<Response<E>> Save(@RequestBody E item) {
         try {
             var response = service.Save(item);

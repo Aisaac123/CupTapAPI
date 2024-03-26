@@ -15,10 +15,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/CupTapAPI/v1/Admins")
-@Tag(name = "Administradores", description = "Controlador de metodos para administradores")
+@Tag(name = "Administradores", description = "Controlador del modulo de administradores")
 public class AdminController implements RControllerInstance<Admin, String> {
 
     AdminService service;
+
     public AdminController(AdminService service) {
         this.service = service;
     }
@@ -28,9 +29,8 @@ public class AdminController implements RControllerInstance<Admin, String> {
         return new RController<>(service.Read());
     }
 
-
     @GetMapping("")
-    public ResponseEntity<Response<List<Admin>>> GetAll(){
+    public ResponseEntity<Response<List<Admin>>> GetAll() {
         return Read().GetAll();
     }
 }

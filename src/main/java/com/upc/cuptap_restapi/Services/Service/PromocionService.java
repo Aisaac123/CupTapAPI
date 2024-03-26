@@ -2,11 +2,11 @@ package com.upc.cuptap_restapi.Services.Service;
 
 import com.upc.cuptap_restapi.Models.Entities.Promocion;
 import com.upc.cuptap_restapi.Repositories.DAO.PromocionDAO;
+import com.upc.cuptap_restapi.Services.DataAccess.DASIntances.CRUDServiceInstance;
 import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements.CService;
 import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements.DService;
 import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements.RService;
 import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements.UService;
-import com.upc.cuptap_restapi.Services.DataAccess.DASIntances.CRUDServiceInstance;
 import org.springframework.stereotype.Service;
 
 @Service
