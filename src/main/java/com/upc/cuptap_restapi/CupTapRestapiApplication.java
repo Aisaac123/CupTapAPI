@@ -18,7 +18,7 @@ public class CupTapRestapiApplication {
     }
 
     @Bean
-    public GroupedOpenApi tweetsOpenApi(@Value("${swagger.appVersion}") String appVersion, @Value("${swagger.title}") String Title) {
+    public GroupedOpenApi CupTapAPI(@Value("${spring.application.version}") String appVersion, @Value("${spring.application.name}") String Title) {
         String[] paths = { "/CupTapAPI/**" };
         return GroupedOpenApi.builder().
                 group("CupTapAPI")
