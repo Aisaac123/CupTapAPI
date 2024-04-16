@@ -1,4 +1,4 @@
-package com.upc.cuptap_restapi.Services.Service;
+package com.upc.cuptap_restapi.Services.Bussiness;
 
 import com.upc.cuptap_restapi.Models.Entities.DetallesPedido;
 import com.upc.cuptap_restapi.Repositories.DAO.DetallesPedidoDAO;

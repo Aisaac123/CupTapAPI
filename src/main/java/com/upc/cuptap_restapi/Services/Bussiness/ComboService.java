@@ -1,4 +1,4 @@
-package com.upc.cuptap_restapi.Services.Service;
+package com.upc.cuptap_restapi.Services.Bussiness;
 
 import com.upc.cuptap_restapi.Models.Entities.Combo;
 import com.upc.cuptap_restapi.Repositories.DAO.ComboDAO;
@@ -37,4 +37,5 @@ public class ComboService implements CRUDServiceInstance<Combo, String> {
     public UService<Combo, String> Modify() {
         return new UService<>(rep);
     }
+
 }

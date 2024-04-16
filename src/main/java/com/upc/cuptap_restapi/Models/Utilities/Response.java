@@ -1,5 +1,6 @@
 package com.upc.cuptap_restapi.Models.Utilities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,8 +11,11 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Response<T> {
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     protected String msg;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     protected T data;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     protected boolean success = true;
 
     public static class Doc {

@@ -6,9 +6,12 @@ import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.CController;
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.DController;
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.RController;
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.UController;
+import com.upc.cuptap_restapi.Models.DTO.PagoDto;
+import com.upc.cuptap_restapi.Models.Entities.Combo;
 import com.upc.cuptap_restapi.Models.Entities.Pago;
+import com.upc.cuptap_restapi.Models.Interfaces.DTO.IDTO;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
-import com.upc.cuptap_restapi.Services.Service.PagoService;
+import com.upc.cuptap_restapi.Services.Bussiness.PagoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -94,8 +97,8 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Pago>> Save(@RequestBody Pago entity) {
-        return Persist().Save(entity);
+    public ResponseEntity<Response<Pago>> Save(@RequestBody PagoDto entity) {
+        return Persist().Save(entity.toEntity());
     }
 
     @PutMapping("/{id}")
@@ -106,8 +109,8 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
             @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Map<String, Pago>>> Update(@PathVariable Long id, @RequestBody Pago new_entity) {
-        return Modify().Update(new_entity, id);
+    public ResponseEntity<Response<Map<String, Pago>>> Update(@PathVariable Long id, @RequestBody PagoDto new_entity) {
+        return Modify().Update(new_entity.toEntity(), id);
     }
 
     @DeleteMapping("/{id}")
@@ -120,5 +123,7 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
     public ResponseEntity<Response<Pago>> Delete(@PathVariable Long id) {
         return Remove().Delete(id);
     }
+
+    // TODO Controladores especificos
 
 }

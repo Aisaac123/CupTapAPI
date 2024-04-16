@@ -1,10 +1,11 @@
 package com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements;
 
-import com.upc.cuptap_restapi.Models.Interfaces.CreateEntity;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.CreateEntity;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
 import com.upc.cuptap_restapi.Models.Utilities.ResponseBuilder;
 import com.upc.cuptap_restapi.Repositories.Repository.GlobalRepository;
 import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Intefaces.ICService;
+import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Intefaces.IRService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+/**
+ *  General Creating Service, use {@link GlobalRepository} and implement interfaces {@link ICService}
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Service

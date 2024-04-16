@@ -5,9 +5,12 @@ import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.CController;
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.DController;
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.RController;
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.UController;
+import com.upc.cuptap_restapi.Models.DTO.PromocionDto;
+import com.upc.cuptap_restapi.Models.Entities.Producto;
 import com.upc.cuptap_restapi.Models.Entities.Promocion;
+import com.upc.cuptap_restapi.Models.Interfaces.DTO.IDTO;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
-import com.upc.cuptap_restapi.Services.Service.PromocionService;
+import com.upc.cuptap_restapi.Services.Bussiness.PromocionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -92,8 +95,8 @@ public class PromocionController implements CRUDControllerInstance<Promocion, Lo
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Promocion>> Save(@RequestBody Promocion entity) {
-        return Persist().Save(entity);
+    public ResponseEntity<Response<Promocion>> Save(@RequestBody PromocionDto entity) {
+        return Persist().Save(entity.toEntity());
     }
 
     @PutMapping("/{id}")
@@ -104,8 +107,8 @@ public class PromocionController implements CRUDControllerInstance<Promocion, Lo
             @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Map<String, Promocion>>> Update(@PathVariable Long id, @RequestBody Promocion new_entity) {
-        return Modify().Update(new_entity, id);
+    public ResponseEntity<Response<Map<String, Promocion>>> Update(@PathVariable Long id, @RequestBody PromocionDto new_entity) {
+        return Modify().Update(new_entity.toEntity(), id);
     }
 
     @DeleteMapping("/{id}")
@@ -119,5 +122,6 @@ public class PromocionController implements CRUDControllerInstance<Promocion, Lo
         return Remove().Delete(id);
     }
 
+    // TODO Controladores especificos
 
 }

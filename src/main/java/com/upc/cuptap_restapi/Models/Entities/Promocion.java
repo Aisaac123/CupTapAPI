@@ -1,7 +1,8 @@
 package com.upc.cuptap_restapi.Models.Entities;
 
-import com.upc.cuptap_restapi.Models.Interfaces.CrudEntity;
-import com.upc.cuptap_restapi.Models.Interfaces.UpdateEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,19 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class Promocion implements CrudEntity {
+
+
+    public Promocion(String nombre, String descripcion, LocalDateTime fecha_inicio, LocalDateTime fecha_fin, int descuento) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.fecha_inicio = fecha_inicio;
+        this.fecha_fin = fecha_fin;
+        this.descuento = descuento;
+    }
+
+    public Promocion(Long id) {
+        this.id = id;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,14 +55,17 @@ public class Promocion implements CrudEntity {
     @Column(length = 3, nullable = false)
     int descuento;
 
-    @Setter
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "promocion")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "promocion", fetch = FetchType.LAZY)
+    @JsonIgnore
     List<Producto> productos;
 
-    @Setter
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "promocion")
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "promocion", fetch = FetchType.LAZY)
     List<Combo> combos;
 
+
+    @Column(nullable = false)
+    LocalDateTime fechaRegistro = LocalDateTime.now();
     @Override
     public UpdateEntity cloneEntity() {
         try {

@@ -5,7 +5,7 @@ import com.upc.cuptap_restapi.Controllers.DataAccess.DACInstances.RControllerIns
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.RController;
 import com.upc.cuptap_restapi.Models.Entities.Estado;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
-import com.upc.cuptap_restapi.Services.Service.EstadoService;
+import com.upc.cuptap_restapi.Services.Bussiness.EstadoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -71,5 +71,6 @@ public class EstadoController implements RControllerInstance<Estado, String> {
         return Read().GetPageable(page_index, limit);
     }
 
+    // TODO Controladores especificos
 
 }

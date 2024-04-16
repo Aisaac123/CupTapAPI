@@ -1,9 +1,10 @@
 package com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements;
 
-import com.upc.cuptap_restapi.Models.Interfaces.UpdateEntity;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
 import com.upc.cuptap_restapi.Models.Utilities.ResponseBuilder;
 import com.upc.cuptap_restapi.Repositories.Repository.GlobalRepository;
+import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Intefaces.IRService;
 import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Intefaces.IUService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -13,19 +14,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+
+/**
+ *  General Update Service, use {@link GlobalRepository} and implement interfaces {@link IUService}
+ */
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Service
 public class UService<E extends UpdateEntity, ID extends Comparable<ID>> implements IUService<E, ID> {
 
-    private static UService<?, ?> _instance;
     private GlobalRepository<E, ID> repository;
-
-    public static <E extends UpdateEntity, ID extends Comparable<ID>> UService<E, ID> GetInstance() {
-        if (_instance == null) _instance = new UService<>();
-        return (UService<E, ID>) _instance;
-    }
-
     public UService<E, ID> setRepository(GlobalRepository<E, ID> repository) {
         this.repository = repository;
         return this;

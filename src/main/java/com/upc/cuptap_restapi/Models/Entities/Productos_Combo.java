@@ -1,12 +1,14 @@
 package com.upc.cuptap_restapi.Models.Entities;
 
-import com.upc.cuptap_restapi.Models.Interfaces.CrudEntity;
-import com.upc.cuptap_restapi.Models.Interfaces.UpdateEntity;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 
 @Entity(name = "Productos_del_combo")
@@ -15,6 +17,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Productos_Combo implements CrudEntity {
+
+
+    public Productos_Combo(int cantidad, Producto producto, Combo combo) {
+        this.cantidad = cantidad;
+        this.producto = producto;
+        this.combo = combo;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +39,13 @@ public class Productos_Combo implements CrudEntity {
     @JoinColumn(name = "nombre_combo")
     Combo combo;
 
+    @Column(nullable = false)
+    LocalDateTime fechaRegistro = LocalDateTime.now();
     @Override
     public UpdateEntity cloneEntity() {
-        return null;
-    }
+        try {
+            return (Productos_Combo) this.clone();
+        } catch (Exception e) {
+            return null;
+        }    }
 }

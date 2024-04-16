@@ -6,9 +6,11 @@ import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.CController;
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.DController;
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.RController;
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.UController;
+import com.upc.cuptap_restapi.Models.DTO.ProductoDto;
 import com.upc.cuptap_restapi.Models.Entities.Producto;
+import com.upc.cuptap_restapi.Models.Interfaces.DTO.IDTO;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
-import com.upc.cuptap_restapi.Services.Service.ProductoService;
+import com.upc.cuptap_restapi.Services.Bussiness.ProductoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -95,8 +97,8 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Producto>> Save(@RequestBody Producto combo) {
-        return Persist().Save(combo);
+    public ResponseEntity<Response<Producto>> Save(@RequestBody ProductoDto combo) {
+        return Persist().Save(combo.toEntity());
     }
 
     @PutMapping("/{id}")
@@ -107,8 +109,8 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
             @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Map<String, Producto>>> Update(@PathVariable String id, @RequestBody Producto new_combo) {
-        return Modify().Update(new_combo, id);
+    public ResponseEntity<Response<Map<String, Producto>>> Update(@PathVariable String id, @RequestBody ProductoDto new_combo) {
+        return Modify().Update(new_combo.toEntity(), id);
     }
 
     @DeleteMapping("/{id}")
@@ -122,5 +124,6 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
         return Remove().Delete(id);
     }
 
+    // TODO Controladores especificos
 
 }

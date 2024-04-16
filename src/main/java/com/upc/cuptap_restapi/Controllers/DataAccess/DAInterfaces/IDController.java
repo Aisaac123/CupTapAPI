@@ -1,6 +1,6 @@
 package com.upc.cuptap_restapi.Controllers.DataAccess.DAInterfaces;
 
-import com.upc.cuptap_restapi.Models.Interfaces.DeleteEnity;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.DeleteEnity;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

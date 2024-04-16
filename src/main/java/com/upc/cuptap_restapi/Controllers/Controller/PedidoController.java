@@ -6,9 +6,12 @@ import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.CController;
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.DController;
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.RController;
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.UController;
+import com.upc.cuptap_restapi.Models.DTO.PedidoDto;
+import com.upc.cuptap_restapi.Models.Entities.Pago;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
+import com.upc.cuptap_restapi.Models.Interfaces.DTO.IDTO;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
-import com.upc.cuptap_restapi.Services.Service.PedidoService;
+import com.upc.cuptap_restapi.Services.Bussiness.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -77,15 +81,15 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
         return Read().GetById(id);
     }
 
-    @GetMapping("/{page_index}/{limit}")
+    @GetMapping("/{fecha}/{page_index}/{limit}")
     @Operation(summary = "Consulta de pedidos (Paginacion)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Muestra la pagina con los pedidos solicitados"),
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Page<Pedido>>> GetPageable(@PathVariable int page_index, @PathVariable int limit) {
-        return Read().GetPageable(page_index, limit);
+    public ResponseEntity<Response<Page<Pedido>>> GetPageable(@PathVariable int page_index, @PathVariable int limit, @PathVariable("fecha") LocalDate fecha) {
+        return Read().GetPageable(page_index, limit, fecha);
     }
 
     @PostMapping("")
@@ -95,8 +99,8 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Pedido>> Save(@RequestBody Pedido entity) {
-        return Persist().Save(entity);
+    public ResponseEntity<Response<Pedido>> Save(@RequestBody PedidoDto entity) {
+        return Persist().Save(entity.toEntity());
     }
 
     @PutMapping("/{id}")
@@ -107,8 +111,8 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
             @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Map<String, Pedido>>> Update(@PathVariable Long id, @RequestBody Pedido new_entity) {
-        return Modify().Update(new_entity, id);
+    public ResponseEntity<Response<Map<String, Pedido>>> Update(@PathVariable Long id, @RequestBody PedidoDto new_entity) {
+        return Modify().Update(new_entity.toEntity(), id);
     }
 
     @DeleteMapping("/{id}")
@@ -122,5 +126,6 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
         return Remove().Delete(id);
     }
 
+    // TODO Controladores especificos
 
 }

@@ -1,16 +1,21 @@
 package com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements;
 
-import com.upc.cuptap_restapi.Models.Interfaces.DeleteEnity;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.DeleteEnity;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
 import com.upc.cuptap_restapi.Models.Utilities.ResponseBuilder;
 import com.upc.cuptap_restapi.Repositories.Repository.GlobalRepository;
 import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Intefaces.IDService;
+import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Intefaces.IRService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+/**
+ *  General Deleting Service, use {@link GlobalRepository} and implement interfaces {@link IDService}
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Service

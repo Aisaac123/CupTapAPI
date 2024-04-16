@@ -1,6 +1,6 @@
 package com.upc.cuptap_restapi.Controllers.DataAccess.DAInterfaces;
 
-import com.upc.cuptap_restapi.Models.Interfaces.ReadEntity;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.ReadEntity;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;

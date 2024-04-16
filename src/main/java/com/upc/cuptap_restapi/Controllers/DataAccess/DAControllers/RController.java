@@ -1,7 +1,7 @@
 package com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers;
 
 import com.upc.cuptap_restapi.Controllers.DataAccess.DAInterfaces.IRController;
-import com.upc.cuptap_restapi.Models.Interfaces.ReadEntity;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.ReadEntity;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
 import com.upc.cuptap_restapi.Models.Utilities.ResponseBuilder;
 import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Intefaces.IRService;
@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
@@ -53,6 +54,14 @@ public class RController<E extends ReadEntity, ID extends Comparable<ID>> implem
     public ResponseEntity<Response<Page<E>>> GetPageable(@PathVariable int page_index, @PathVariable int limit) {
         try {
             return new ResponseEntity<>(service.GetPages(page_index, limit), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(ResponseBuilder.Error(e), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/{fecha}/{page_index}/{limit}")
+    public ResponseEntity<Response<Page<E>>> GetPageable(@PathVariable int page_index, @PathVariable int limit, @PathVariable("fecha") LocalDate fecha) {
+        try {
+            return new ResponseEntity<>(service.GetPages(page_index, limit, fecha), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(ResponseBuilder.Error(e), HttpStatus.INTERNAL_SERVER_ERROR);
         }

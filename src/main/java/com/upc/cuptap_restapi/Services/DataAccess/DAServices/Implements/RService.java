@@ -1,6 +1,6 @@
 package com.upc.cuptap_restapi.Services.DataAccess.DAServices.Implements;
 
-import com.upc.cuptap_restapi.Models.Interfaces.ReadEntity;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.ReadEntity;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
 import com.upc.cuptap_restapi.Models.Utilities.ResponseBuilder;
 import com.upc.cuptap_restapi.Repositories.Repository.GlobalRepository;
@@ -12,8 +12,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
+
+/**
+ *  General Reading Service, use {@link GlobalRepository} and implement interfaces {@link IRService}
+ */
 @Service
 @Setter
 @AllArgsConstructor
@@ -53,6 +58,17 @@ public class RService<E extends ReadEntity, ID extends Comparable<ID>> implement
         try {
             PageRequest pageable = PageRequest.of(page_index - 1, limit);
             Page<E> _page = repository.findAll(pageable);
+            return new ResponseBuilder<Page<E>>().withSuccess(true).withData(_page);
+        } catch (Exception e) {
+            return ResponseBuilder.Error(e);
+        }
+    }
+    @Override
+    public Response<Page<E>> GetPages(int page_index, int limit, LocalDate fecha) {
+        try {
+            if (fecha == null) return GetPages(page_index, limit);
+            PageRequest pageable = PageRequest.of(page_index - 1, limit);
+            Page<E> _page = repository.findAllByFechaRegistro(pageable, fecha.atStartOfDay());
             return new ResponseBuilder<Page<E>>().withSuccess(true).withData(_page);
         } catch (Exception e) {
             return ResponseBuilder.Error(e);
