@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/CupTapAPI/v1/Estados")
+@RequestMapping("/v1/Estados")
 @Tag(name = "Estados del pedido", description = "Controlador de estados para el modulo de pedidos")
 public class EstadoController implements RControllerInstance<Estado, String> {
     final

@@ -30,7 +30,7 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/CupTapAPI/v1/Usuarios")
+@RequestMapping("/v1/Usuarios")
 @Tag(name = "Usuarios", description = "Controlador del modulo de usuarios")
 
 public class UsuarioController implements CControllerInstance<Usuario, UUID>, RControllerInstance<Usuario, UUID> {

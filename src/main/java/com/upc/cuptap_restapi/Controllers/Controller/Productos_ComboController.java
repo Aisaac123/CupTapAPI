@@ -23,7 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/CupTapAPI/v1/ProductosCombos")
+@RequestMapping("/v1/ProductosCombos")
 @Tag(name = "Productos del combo", description = "Controlador de productos relacionados a un combo del modulo de productos y combos")
 
 public class Productos_ComboController implements

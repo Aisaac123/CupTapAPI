@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/CupTapAPI/v1/Pagos")
+@RequestMapping("/v1/Pagos")
 @Tag(name = "Pagos", description = "Controlador del modulo de pagos")
 public class PagoController implements CRUDControllerInstance<Pago, Long> {
 
@@ -62,7 +62,6 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
     @Operation(summary = "Consulta todos los pagos registrados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Muestra los pagos registrados"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<List<Pago>>> GetAll() {
         return Read().GetAll();
@@ -72,8 +71,6 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
     @Operation(summary = "Consulta de pagos por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Muestra los datos de los pagos correspondiente"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Pago>> GetById(@PathVariable Long id) {
         return Read().GetById(id);
@@ -83,8 +80,6 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
     @Operation(summary = "Consulta de pagos (Paginacion)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Muestra la pagina con los pagos solicitados"),
-            @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Page<Pago>>> GetPageable(@PathVariable int page_index, @PathVariable int limit) {
         return Read().GetPageable(page_index, limit);
@@ -94,8 +89,6 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
     @Operation(summary = "Permite registrar pagos")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se agregó correctamente el pago"),
-            @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Pago>> Save(@RequestBody PagoDto entity) {
         return Persist().Save(entity.toEntity());
@@ -105,9 +98,6 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
     @Operation(summary = "Permite actualizar los datos de los pagos por medio de su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se actualizo correctamente los datos de los detalles del pedido"),
-            @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Pago>>> Update(@PathVariable Long id, @RequestBody PagoDto new_entity) {
         return Modify().Update(new_entity.toEntity(), id);
@@ -116,9 +106,7 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
     @DeleteMapping("/{id}")
     @Operation(summary = "Permite eliminar un pago por ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Se eliminó correctamente el detalle del pedido"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
+            @ApiResponse(responseCode = "200", description = "Se eliminó correctamente el pago"),
     })
     public ResponseEntity<Response<Pago>> Delete(@PathVariable Long id) {
         return Remove().Delete(id);

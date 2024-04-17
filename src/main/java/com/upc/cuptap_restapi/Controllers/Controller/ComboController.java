@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/CupTapAPI/v1/Combos")
+@RequestMapping("/v1/Combos")
 @Tag(name = "Combos", description = "Controlador del modulo de Combos")
 public class ComboController implements CRUDControllerInstance<Combo, String> {
 

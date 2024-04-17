@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/CupTapAPI/v1/Admins")
+@RequestMapping("/v1/Admins")
 @Tag(name = "Administradores", description = "Controlador del modulo de administradores")
 public class AdminController implements RControllerInstance<Admin, String> {
 

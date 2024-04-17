@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/CupTapAPI/v1/Promociones")
+@RequestMapping("/v1/Promociones")
 @Tag(name = "Promociones", description = "Controlador del modulo de promociones")
 public class PromocionController implements CRUDControllerInstance<Promocion, Long> {
     final

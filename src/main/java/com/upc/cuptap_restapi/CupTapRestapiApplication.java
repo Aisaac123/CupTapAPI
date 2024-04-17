@@ -29,7 +29,7 @@ public class CupTapRestapiApplication implements CommandLineRunner {
 
     @Bean
     public GroupedOpenApi CupTapAPI(@Value("${spring.application.version}") String appVersion, @Value("${spring.application.name}") String Title) {
-        String[] paths = { "/CupTapAPI/**" };
+        String[] paths = { "/v1/**" };
         return GroupedOpenApi.builder().
                 group("CupTapAPI")
                 .addOpenApiCustomizer(openApi -> openApi.info(new Info().title(Title).version(appVersion)))

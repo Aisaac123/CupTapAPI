@@ -5,6 +5,10 @@ import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
 import com.upc.cuptap_restapi.Models.Utilities.ResponseBuilder;
 import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Intefaces.IUService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +32,11 @@ public class UController<E extends UpdateEntity, ID extends Comparable<ID>> impl
     }
 
     @PutMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
+    })
     public ResponseEntity<Response<Map<String, E>>> Update(@RequestBody E item, @PathVariable ID id) {
         try {
             var response = service.Update(item, id);

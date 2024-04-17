@@ -5,6 +5,10 @@ import com.upc.cuptap_restapi.Models.Interfaces.Entities.CreateEntity;
 import com.upc.cuptap_restapi.Models.Utilities.Response;
 import com.upc.cuptap_restapi.Models.Utilities.ResponseBuilder;
 import com.upc.cuptap_restapi.Services.DataAccess.DAServices.Intefaces.ICService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +29,10 @@ public class CController<E extends CreateEntity, ID extends Comparable<ID>> impl
     }
 
     @PostMapping("")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
+    })
     public ResponseEntity<Response<E>> Save(@RequestBody E item) {
         try {
             var response = service.Save(item);
