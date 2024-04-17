@@ -1,23 +1,31 @@
+# Use Ubuntu with OpenJDK 21 for build stage
+FROM ubuntu:latest AS builder
 
-FROM maven:3.8.4-openjdk-11 AS build
+# Update package list
+RUN apt-get update
 
-# Establecer un directorio de trabajo
+# Install OpenJDK 21
+RUN apt-get install openjdk-21-jdk -y
+
+# Install Maven
+RUN apt-get install maven -y
+
+# Copy the project directory
 WORKDIR /app
 
-# Copiar archivos de tu proyecto al directorio de trabajo
-COPY . /app
+COPY . .
 
-# Ejecutar Maven para construir el proyecto
-RUN mvn clean package
+# Build the JAR with Maven
+RUN mvn package
 
-# Usa una imagen base de Java
-FROM openjdk:17-jdk-slim
+# Switch to a slimmer runtime image with OpenJDK 21
+FROM openjdk:21-jdk-slim
 
-# Copia el archivo JAR de la aplicación Spring Boot al contenedor
-COPY --from=build /app/target/CupTap_RESTAPI-0.0.1-SNAPSHOT.jar app.jar
-
-# Expone el puerto en el que la aplicación se ejecuta dentro del contenedor
+# Expose port 1243
 EXPOSE 1243
 
-# Comando para ejecutar la aplicación Spring Boot cuando se inicie el contenedor
-CMD ["java", "-jar", "app.jar"]
+# Copy the JAR from the build stage
+COPY --from=builder /app/target/*.jar app.jar
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
