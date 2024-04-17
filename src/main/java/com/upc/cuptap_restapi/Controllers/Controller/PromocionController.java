@@ -70,7 +70,7 @@ public class PromocionController implements CRUDControllerInstance<Promocion, Lo
     @Operation(summary = "Consulta de promociones por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Muestra los datos de las promociones correspondiente"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro la promocion por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Promocion>> GetById(@PathVariable Long id) {
@@ -104,7 +104,7 @@ public class PromocionController implements CRUDControllerInstance<Promocion, Lo
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se actualizo correctamente los datos de la promocion"),
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro la promocion por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Promocion>>> Update(@PathVariable Long id, @RequestBody PromocionDto new_entity) {
@@ -115,7 +115,7 @@ public class PromocionController implements CRUDControllerInstance<Promocion, Lo
     @Operation(summary = "Permite eliminar la promociones por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se eliminó correctamente la promocion"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro la promocion por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Promocion>> Delete(@PathVariable Long id) {

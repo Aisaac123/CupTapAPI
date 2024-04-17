@@ -108,7 +108,7 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se actualizo correctamente los datos del pedido"),
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro el pedido por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Pedido>>> Update(@PathVariable Long id, @RequestBody PedidoDto new_entity) {
@@ -119,7 +119,7 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
     @Operation(summary = "Permite eliminar el pedido por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se eliminó correctamente el detalle del pedido"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro el pedido por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Pedido>> Delete(@PathVariable Long id) {

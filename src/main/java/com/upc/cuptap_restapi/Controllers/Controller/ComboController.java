@@ -70,7 +70,7 @@ public class ComboController implements CRUDControllerInstance<Combo, String> {
     @Operation(summary = "Consulta combos por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Muestra los datos del combo correspondiente"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro el combo por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Combo>> GetById(@PathVariable String id) {
@@ -104,7 +104,7 @@ public class ComboController implements CRUDControllerInstance<Combo, String> {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se actualizo correctamente los datos del combo"),
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro el combo por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Combo>>> Update(@PathVariable String id, @RequestBody ComboDto new_combo) {
@@ -115,7 +115,7 @@ public class ComboController implements CRUDControllerInstance<Combo, String> {
     @Operation(summary = "Permite eliminar combos por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se eliminó correctamente al combo"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro el combo por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Combo>> Delete(@PathVariable String id) {

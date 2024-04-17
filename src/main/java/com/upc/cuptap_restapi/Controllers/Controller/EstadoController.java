@@ -53,7 +53,7 @@ public class EstadoController implements RControllerInstance<Estado, String> {
     @Operation(summary = "Consulta estados por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Muestra los datos del estado del pedido correspondiente"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro el estado del pedido por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Estado>> GetById(@PathVariable String id) {

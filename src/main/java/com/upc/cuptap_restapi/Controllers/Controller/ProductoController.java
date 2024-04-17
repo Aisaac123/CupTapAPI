@@ -59,9 +59,9 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
 
 
     @GetMapping("")
-    @Operation(summary = "Consulta todos los pedidos registrados")
+    @Operation(summary = "Consulta todos los productos registrados")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Muestra los datos de todos los pedidos"),
+            @ApiResponse(responseCode = "200", description = "Muestra los datos de todos los productos"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<List<Producto>>> GetAll() {
@@ -69,10 +69,10 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Consulta pedidos por su ID")
+    @Operation(summary = "Consulta productos por su ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Muestra los datos del pedido correspondiente"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "200", description = "Muestra los datos del producto correspondiente"),
+            @ApiResponse(responseCode = "404", description = "No se encontro el producto por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Producto>> GetById(@PathVariable String id) {
@@ -80,9 +80,9 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
     }
 
     @GetMapping("/{page_index}/{limit}")
-    @Operation(summary = "Consulta de pedidos (Paginacion)")
+    @Operation(summary = "Consulta de productos (Paginacion)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Muestra la pagina con los pedidos solicitados"),
+            @ApiResponse(responseCode = "200", description = "Muestra la pagina con los productos solicitados"),
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
@@ -91,9 +91,9 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
     }
 
     @PostMapping("")
-    @Operation(summary = "Permite registrar pedidos")
+    @Operation(summary = "Permite registrar productos")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Se agregó correctamente al pedido"),
+            @ApiResponse(responseCode = "200", description = "Se agregó correctamente al producto"),
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
@@ -102,11 +102,11 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Permite actualizar los datos del pedido por medio de su ID")
+    @Operation(summary = "Permite actualizar los datos del producto por medio de su ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Se actualizo correctamente los datos del pedido"),
+            @ApiResponse(responseCode = "200", description = "Se actualizo correctamente los datos del producto"),
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro el producto por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Producto>>> Update(@PathVariable String id, @RequestBody ProductoDto new_combo) {
@@ -114,10 +114,10 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Permite eliminar pedidos por ID")
+    @Operation(summary = "Permite eliminar productos por ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Se eliminó correctamente al pedido"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "200", description = "Se eliminó correctamente al producto"),
+            @ApiResponse(responseCode = "404", description = "No se encontro el producto por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Producto>> Delete(@PathVariable String id) {

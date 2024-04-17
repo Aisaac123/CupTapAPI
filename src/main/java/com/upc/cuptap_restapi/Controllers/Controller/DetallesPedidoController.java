@@ -71,7 +71,7 @@ public class DetallesPedidoController implements CRUDControllerInstance<Detalles
     @Operation(summary = "Consulta detalles del pedido por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Muestra los datos de los detalles del pedido correspondiente"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro el detalle del pedido por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<DetallesPedido>> GetById(@PathVariable Long id) {
@@ -105,7 +105,7 @@ public class DetallesPedidoController implements CRUDControllerInstance<Detalles
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se actualizo correctamente los datos de los detalles del pedido"),
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro el detalle del pedido por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, DetallesPedido>>> Update(@PathVariable Long id, @RequestBody DetallesPedidoDto new_entity) {
@@ -116,7 +116,7 @@ public class DetallesPedidoController implements CRUDControllerInstance<Detalles
     @Operation(summary = "Permite eliminar detalles del pedido por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se eliminó correctamente el detalle del pedido"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro el detalle del pedido por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<DetallesPedido>> Delete(@PathVariable Long id) {
