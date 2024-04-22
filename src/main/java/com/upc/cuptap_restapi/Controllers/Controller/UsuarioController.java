@@ -1,32 +1,35 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
-import com.upc.cuptap_restapi.Controllers.DataAccess.DACInstances.CControllerInstance;
-import com.upc.cuptap_restapi.Controllers.DataAccess.DACInstances.RControllerInstance;
-import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.CController;
-import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.RController;
-import com.upc.cuptap_restapi.Models.DTO.PedidoDto;
-import com.upc.cuptap_restapi.Models.DTO.UsuarioDto;
+import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.RControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
+import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.*;
+import com.upc.cuptap_restapi.Models.Entities.DetallesPedido;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
-import com.upc.cuptap_restapi.Models.Entities.Promocion;
 import com.upc.cuptap_restapi.Models.Entities.Usuario;
-import com.upc.cuptap_restapi.Models.Interfaces.DTO.IDTO;
-import com.upc.cuptap_restapi.Models.Utilities.Response;
-import com.upc.cuptap_restapi.Models.Utilities.ResponseBuilder;
-import com.upc.cuptap_restapi.Services.Bussiness.UsuarioService;
+import com.upc.cuptap_restapi.Models.Utils.Response;
+import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
+import com.upc.cuptap_restapi.Services.Logic.PedidoService;
+import com.upc.cuptap_restapi.Services.Logic.UsuarioService;
+import com.upc.cuptap_restapi.Services.Utils.Options.ReadingOptions;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Page;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -36,42 +39,39 @@ import java.util.UUID;
 public class UsuarioController implements CControllerInstance<Usuario, UUID>, RControllerInstance<Usuario, UUID> {
 
 
-    private final UsuarioService service;
+    private final UsuarioService serv;
 
-    public UsuarioController(UsuarioService usuarioService) {
-        service = usuarioService;
+    final
+    PedidoService pedidoServ;
+
+
+    public UsuarioController(UsuarioService usuarioService, PedidoService pedidoServ) {
+        serv = usuarioService;
+        this.pedidoServ = pedidoServ;
     }
 
     @Override
     public CController<Usuario, UUID> Persist() {
-        return new CController<>(service.Persist());
+        return new CController<>(serv.Persist());
     }
 
     @Override
     public RController<Usuario, UUID> Read() {
-        return new RController<>(service.Read());
+        return new RController<>(serv.Read());
     }
-
 
     @GetMapping("")
-    @Operation(summary = "Consulta todos los usuarios registrados")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Muestra los datos de todos los usuarios"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
-    })
-    public ResponseEntity<Response<List<Usuario>>> GetAll() {
-        return Read().GetAll();
-    }
-
-    @GetMapping("/{page_index}/{limit}")
     @Operation(summary = "Consulta de usuarios (Paginacion)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Muestra la pagina con los usuarios solicitados"),
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Page<Usuario>>> GetPageable(@PathVariable int page_index, @PathVariable int limit) {
-        return Read().GetPageable(page_index, limit);
+    public ResponseEntity<Response> GetAll(@RequestParam(name = "index", defaultValue = "-1", required = false) int page_index,
+                                           @RequestParam(name = "limit", defaultValue = "-1", required = false) int limit,
+                                           @RequestParam(name = "dateLimit", required = false) LocalDate fecha,
+                                           @RequestParam(name = "lazy", required = false) boolean isLazy) {
+        return Read().GetAll(page_index, limit, fecha, isLazy);
     }
 
     @PostMapping("")
@@ -81,8 +81,8 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Usuario>> Save(@RequestBody UsuarioDto usuario) {
-        return Persist().Save(usuario.toEntity());
+    public ResponseEntity<Response<Usuario>> Save(@RequestBody UsuarioRequest usuario) {
+        return Persist().Save(serv.Reconstruct(usuario));
     }
 
 
@@ -97,9 +97,9 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
             @ApiResponse(responseCode = "404", description = "No se encontro el usuario por cedula", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Map<String, Usuario>>> PutByCedula(@PathVariable String cedula, @RequestBody UsuarioDto new_user) {
+    public ResponseEntity<Response<Map<String, Usuario>>> PutByCedula(@PathVariable String cedula, @RequestBody UsuarioRequest new_user, @RequestParam(value = "lazy", required = false) boolean isLazy) {
         try {
-            var response = service.UpdateByCedula(new_user.toEntity(), cedula);
+            var response = serv.UpdateByCedula(serv.Reconstruct(new_user), cedula);
             HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(response, status);
         } catch (Exception e) {
@@ -116,7 +116,7 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
     })
     public ResponseEntity<Response<Usuario>> DeleteByCedula(@PathVariable String cedula) {
         try {
-            var response = service.DeleteByCedula(cedula);
+            var response = serv.DeleteByCedula(cedula);
             HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(response, status);
         } catch (Exception e) {
@@ -131,9 +131,9 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
             @ApiResponse(responseCode = "404", description = "No se encontro el usuario por cedula", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Usuario>> GetByCedula(@PathVariable String cedula) {
+    public ResponseEntity<Response<Usuario>> GetByCedula(@PathVariable String cedula, @RequestParam(name = "lazy", required = false) boolean isLazy) {
         try {
-            var response = service.GetByCedula(cedula);
+            var response = serv.GetByCedula(cedula, new ReadingOptions().withLazy(isLazy));
             HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(response, status);
         } catch (Exception e) {
@@ -153,7 +153,7 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
     })
     public ResponseEntity<Response<List<Pedido>>> GetPedidos(@PathVariable String cedula) {
         try {
-            var response = service.GetPedidos(cedula);
+            var response = serv.GetPedidos(cedula);
             HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(response, status);
         } catch (Exception e) {
@@ -168,9 +168,9 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
             @ApiResponse(responseCode = "404", description = "No se encontro el usuario por cedula", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Pedido>> AddPedidos(@RequestBody PedidoDto pedido, @PathVariable String cedula) {
+    public ResponseEntity<Response<Pedido>> AddPedidos(@RequestBody Set<DetallesPedidoRequestNoId> detallesPedidoRequests, @PathVariable String cedula) {
         try {
-            var response = service.AddPedidoToUsuario(cedula, pedido.toEntity());
+            var response = serv.AddPedidoToUsuario(cedula, detallesPedidoRequests.stream().map(DetallesPedidoRequestNoId::toEntity).collect(Collectors.toSet()));
             HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(response, status);
         } catch (Exception e) {

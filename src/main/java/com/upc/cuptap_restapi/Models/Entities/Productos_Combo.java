@@ -1,7 +1,11 @@
 package com.upc.cuptap_restapi.Models.Entities;
 
-import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
+import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.ComboLazy;
+import com.upc.cuptap_restapi.Models.Interfaces.DTO.HasLazy;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.CreateEntity;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.DeleteEnity;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
+import com.upc.cuptap_restapi.Models.Utils.NoUpdate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,8 +20,27 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Productos_Combo implements CrudEntity {
+public class Productos_Combo implements CreateEntity, UpdateEntity, DeleteEnity {
 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id;
+    @Column(length = 4, nullable = false)
+    int cantidad;
+    @Setter
+    @NoUpdate
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "nombre_producto")
+    Producto producto;
+    @Setter
+    @NoUpdate
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "nombre_combo")
+    Combo combo;
+    @NoUpdate
+    @Column(nullable = false)
+    LocalDateTime fechaRegistro = LocalDateTime.now();
 
     public Productos_Combo(int cantidad, Producto producto, Combo combo) {
         this.cantidad = cantidad;
@@ -25,27 +48,12 @@ public class Productos_Combo implements CrudEntity {
         this.combo = combo;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
-    @Column(length = 4, nullable = false)
-    int cantidad;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "nombre_producto")
-    Producto producto;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "nombre_combo")
-    Combo combo;
-
-    @Column(nullable = false)
-    LocalDateTime fechaRegistro = LocalDateTime.now();
     @Override
     public UpdateEntity cloneEntity() {
         try {
             return (Productos_Combo) this.clone();
         } catch (Exception e) {
             return null;
-        }    }
+        }
+    }
 }

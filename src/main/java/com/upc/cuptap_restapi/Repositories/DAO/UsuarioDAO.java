@@ -1,6 +1,5 @@
 package com.upc.cuptap_restapi.Repositories.DAO;
 
-import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Entities.Usuario;
 import com.upc.cuptap_restapi.Repositories.Repository.GlobalRepository;
 
@@ -13,6 +12,7 @@ import java.util.UUID;
  */
 public interface UsuarioDAO extends GlobalRepository<Usuario, UUID> {
     List<Usuario> findAllByNombre(String nombre);
+
     Usuario findByCedula(String cedula);
 
 }

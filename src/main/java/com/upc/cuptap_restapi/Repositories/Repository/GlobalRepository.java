@@ -9,6 +9,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 /**
@@ -19,4 +20,8 @@ public interface GlobalRepository<T extends Entity, ID extends Comparable<ID>> e
 
     @Query("SELECT e FROM #{#entityName} e WHERE e.fechaRegistro >= :fecha")
     Page<T> findAllByFechaRegistro(Pageable pageable, @Param("fecha") LocalDateTime fecha);
+
+    @Query("SELECT e FROM #{#entityName} e WHERE e.fechaRegistro >= :fecha")
+    List<T> findAllByFechaRegistro(@Param("fecha") LocalDateTime fecha);
+
 }

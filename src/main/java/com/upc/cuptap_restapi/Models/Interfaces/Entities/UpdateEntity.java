@@ -1,7 +1,7 @@
 package com.upc.cuptap_restapi.Models.Interfaces.Entities;
 
+import com.upc.cuptap_restapi.Models.Utils.NoUpdate;
 import jakarta.persistence.Id;
-import lombok.Setter;
 
 import java.lang.reflect.Field;
 
@@ -22,8 +22,8 @@ public interface UpdateEntity extends Cloneable, Entity {
             // Permite el acceso a los campos
             field.setAccessible(true);
 
-            // Si el campo está anotado con @Id o no tiene la anotacion @Setter, omite su actualizacion
-            if (field.isAnnotationPresent(Id.class) || !field.isAnnotationPresent(Setter.class)) continue;
+            // Si el campo está anotado con @Id o @NoUpdate, omite su actualizacion
+            if (!field.isAnnotationPresent(Id.class) || !field.isAnnotationPresent(NoUpdate.class)) continue;
 
             // Obtener el campo con el valor del nuevo objeto
             Object newValue = field.get(newObject);

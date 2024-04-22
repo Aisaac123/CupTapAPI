@@ -1,28 +1,25 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
 
-import com.upc.cuptap_restapi.Controllers.DataAccess.DACInstances.CRUDControllerInstance;
-import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.CController;
-import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.DController;
-import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.RController;
-import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.UController;
-import com.upc.cuptap_restapi.Models.DTO.PagoDto;
-import com.upc.cuptap_restapi.Models.Entities.Combo;
+import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
+import com.upc.cuptap_restapi.Controllers.Providers.Providers.DController;
+import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
+import com.upc.cuptap_restapi.Controllers.Providers.Providers.UController;
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.PagoRequest;
 import com.upc.cuptap_restapi.Models.Entities.Pago;
-import com.upc.cuptap_restapi.Models.Interfaces.DTO.IDTO;
-import com.upc.cuptap_restapi.Models.Utilities.Response;
-import com.upc.cuptap_restapi.Services.Bussiness.PagoService;
+import com.upc.cuptap_restapi.Models.Utils.Response;
+import com.upc.cuptap_restapi.Services.Logic.PagoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
@@ -57,17 +54,6 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
         return new UController<>(serv.Modify());
     }
 
-
-    @GetMapping("")
-    @Operation(summary = "Consulta todos los pagos registrados")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Muestra los pagos registrados"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
-    })
-    public ResponseEntity<Response<List<Pago>>> GetAll() {
-        return Read().GetAll();
-    }
-
     @GetMapping("/{id}")
     @Operation(summary = "Consulta de pagos por su ID")
     @ApiResponses(value = {
@@ -75,19 +61,21 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
             @ApiResponse(responseCode = "404", description = "No se encontro el pago por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Pago>> GetById(@PathVariable Long id) {
-        return Read().GetById(id);
+    public ResponseEntity<Response<Pago>> GetById(@PathVariable Long id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
+        return Read().GetById(id, isLazy);
     }
-
-    @GetMapping("/{page_index}/{limit}")
+    @GetMapping("")
     @Operation(summary = "Consulta de pagos (Paginacion)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Muestra la pagina con los pagos solicitados"),
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Page<Pago>>> GetPageable(@PathVariable int page_index, @PathVariable int limit) {
-        return Read().GetPageable(page_index, limit);
+    public ResponseEntity<Response> GetAll(@RequestParam(value = "index", defaultValue = "-1", required = false) int page_index,
+                                           @RequestParam(value = "limit", defaultValue = "-1", required = false) int limit,
+                                           @RequestParam(value = "dateLimit", required = false) LocalDate fecha,
+                                           @RequestParam(value = "lazy", required = false) boolean isLazy) {
+        return Read().GetAll(page_index, limit, fecha, isLazy);
     }
 
     @PostMapping("")
@@ -97,8 +85,8 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Pago>> Save(@RequestBody PagoDto entity) {
-        return Persist().Save(entity.toEntity());
+    public ResponseEntity<Response<Pago>> Save(@RequestBody PagoRequest entity) {
+        return Persist().Save(serv.Reconstruct(entity));
     }
 
     @PutMapping("/{id}")
@@ -109,8 +97,8 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
             @ApiResponse(responseCode = "404", description = "No se encontro el pago por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Map<String, Pago>>> Update(@PathVariable Long id, @RequestBody PagoDto new_entity) {
-        return Modify().Update(new_entity.toEntity(), id);
+    public ResponseEntity<Response<Map<String, Pago>>> Update(@PathVariable Long id, @RequestBody PagoRequest new_entity) {
+        return Modify().Update(serv.Reconstruct(new_entity), id);
     }
 
     @DeleteMapping("/{id}")

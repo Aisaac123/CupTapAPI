@@ -1,6 +1,6 @@
 package com.upc.cuptap_restapi;
 
-import com.upc.cuptap_restapi.Services.Utils.Estadisticas;
+import com.upc.cuptap_restapi.Services.Logic.Estadisticas;
 import io.swagger.v3.oas.models.info.Info;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +29,7 @@ public class CupTapRestapiApplication implements CommandLineRunner {
 
     @Bean
     public GroupedOpenApi CupTapAPI(@Value("${spring.application.version}") String appVersion, @Value("${spring.application.name}") String Title) {
-        String[] paths = { "/v1/**" };
+        String[] paths = {"/v1/**"};
         return GroupedOpenApi.builder().
                 group("CupTapAPI")
                 .addOpenApiCustomizer(openApi -> openApi.info(new Info().title(Title).version(appVersion)))

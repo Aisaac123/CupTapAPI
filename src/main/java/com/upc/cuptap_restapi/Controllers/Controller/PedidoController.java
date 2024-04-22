@@ -1,29 +1,25 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
 
-import com.upc.cuptap_restapi.Controllers.DataAccess.DACInstances.CRUDControllerInstance;
-import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.CController;
-import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.DController;
-import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.RController;
-import com.upc.cuptap_restapi.Controllers.DataAccess.DAControllers.UController;
-import com.upc.cuptap_restapi.Models.DTO.PedidoDto;
-import com.upc.cuptap_restapi.Models.Entities.Pago;
+import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
+import com.upc.cuptap_restapi.Controllers.Providers.Providers.DController;
+import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
+import com.upc.cuptap_restapi.Controllers.Providers.Providers.UController;
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoRequest;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
-import com.upc.cuptap_restapi.Models.Interfaces.DTO.IDTO;
-import com.upc.cuptap_restapi.Models.Utilities.Response;
-import com.upc.cuptap_restapi.Services.Bussiness.PedidoService;
+import com.upc.cuptap_restapi.Models.Utils.Response;
+import com.upc.cuptap_restapi.Services.Logic.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,6 +30,7 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
 
     final
     PedidoService serv;
+
 
     public PedidoController(PedidoService serv) {
         this.serv = serv;
@@ -59,17 +56,6 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
         return new UController<>(serv.Modify());
     }
 
-
-    @GetMapping("")
-    @Operation(summary = "Consulta todos los pedidos registrados")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Muestra los pedidos registrados"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
-    })
-    public ResponseEntity<Response<List<Pedido>>> GetAll() {
-        return Read().GetAll();
-    }
-
     @GetMapping("/{id}")
     @Operation(summary = "Consulta de pedidos por su ID")
     @ApiResponses(value = {
@@ -77,19 +63,21 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
             @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Pedido>> GetById(@PathVariable Long id) {
-        return Read().GetById(id);
+    public ResponseEntity<Response<Pedido>> GetById(@PathVariable Long id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
+        return Read().GetById(id, isLazy);
     }
-
-    @GetMapping("/{fecha}/{page_index}/{limit}")
+    @GetMapping("")
     @Operation(summary = "Consulta de pedidos (Paginacion)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Muestra la pagina con los pedidos solicitados"),
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Page<Pedido>>> GetPageable(@PathVariable int page_index, @PathVariable int limit, @PathVariable("fecha") LocalDate fecha) {
-        return Read().GetPageable(page_index, limit, fecha);
+    public ResponseEntity<Response> GetAll(@RequestParam(value = "index", defaultValue = "-1", required = false) int page_index,
+                                           @RequestParam(value = "limit", defaultValue = "-1", required = false) int limit,
+                                           @RequestParam(value = "dateLimit", required = false) LocalDate fecha,
+                                           @RequestParam(value = "lazy", required = false) boolean isLazy) {
+        return Read().GetAll(page_index, limit, fecha, isLazy);
     }
 
     @PostMapping("")
@@ -99,8 +87,9 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Pedido>> Save(@RequestBody PedidoDto entity) {
-        return Persist().Save(entity.toEntity());
+    public ResponseEntity<Response<Pedido>> Save(@RequestBody PedidoRequest entity) {
+
+        return Persist().Save(serv.Reconstruct(entity));
     }
 
     @PutMapping("/{id}")
@@ -111,8 +100,8 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
             @ApiResponse(responseCode = "404", description = "No se encontro el pedido por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Map<String, Pedido>>> Update(@PathVariable Long id, @RequestBody PedidoDto new_entity) {
-        return Modify().Update(new_entity.toEntity(), id);
+    public ResponseEntity<Response<Map<String, Pedido>>> Update(@PathVariable Long id, @RequestBody PedidoRequest new_entity) {
+        return Modify().Update(serv.Reconstruct(new_entity), id);
     }
 
     @DeleteMapping("/{id}")

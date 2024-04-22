@@ -5,8 +5,6 @@ import com.upc.cuptap_restapi.Repositories.Repository.GlobalRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 
 /**
  * Repository of {@link com.upc.cuptap_restapi.Models.Entities.Pedido}

@@ -1,4 +1,6 @@
 package com.upc.cuptap_restapi.Models.Interfaces.Entities;
 
-public interface ReadEntity extends Entity {
+import com.upc.cuptap_restapi.Models.Interfaces.DTO.HasLazy;
+
+public interface ReadEntity extends Entity, HasLazy {
 }

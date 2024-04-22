@@ -1,8 +1,11 @@
 package com.upc.cuptap_restapi.Models.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.PromocionLazy;
+import com.upc.cuptap_restapi.Models.Interfaces.DTO.LazyDTO;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
+import com.upc.cuptap_restapi.Models.Utils.NoUpdate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +22,38 @@ import java.util.List;
 public class Promocion implements CrudEntity {
 
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+    @Setter
+    @Column(length = 50, unique = true, nullable = false)
+    String nombre;
+    @Setter
+    @Column(columnDefinition = "TEXT")
+    String descripcion;
+    @Setter
+    @Column(nullable = false)
+    LocalDateTime fecha_inicio;
+    @Setter
+    @Column(nullable = false)
+    LocalDateTime fecha_fin;
+    @Setter
+    @Column(length = 3, nullable = false)
+    int descuento;
+    @Setter
+    @NoUpdate
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "promocion", fetch = FetchType.EAGER)
+    @JsonIgnore
+    List<Producto> productos;
+    @Setter
+    @NoUpdate
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "promocion", fetch = FetchType.EAGER)
+    List<Combo> combos;
+    @NoUpdate
+    @Column(nullable = false)
+    LocalDateTime fechaRegistro = LocalDateTime.now();
+
     public Promocion(String nombre, String descripcion, LocalDateTime fecha_inicio, LocalDateTime fecha_fin, int descuento) {
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -31,41 +66,6 @@ public class Promocion implements CrudEntity {
         this.id = id;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
-    @Setter
-    @Column(length = 50, unique = true, nullable = false)
-    String nombre;
-
-    @Setter
-    @Column(columnDefinition = "TEXT")
-    String descripcion;
-
-    @Setter
-    @Column(nullable = false)
-    LocalDateTime fecha_inicio;
-
-    @Setter
-    @Column(nullable = false)
-    LocalDateTime fecha_fin;
-
-    @Setter
-    @Column(length = 3, nullable = false)
-    int descuento;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "promocion", fetch = FetchType.LAZY)
-    @JsonIgnore
-    List<Producto> productos;
-
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "promocion", fetch = FetchType.LAZY)
-    List<Combo> combos;
-
-
-    @Column(nullable = false)
-    LocalDateTime fechaRegistro = LocalDateTime.now();
     @Override
     public UpdateEntity cloneEntity() {
         try {
@@ -73,5 +73,10 @@ public class Promocion implements CrudEntity {
         } catch (CloneNotSupportedException e) {
             return null;
         }
+    }
+
+    @Override
+    public PromocionLazy toLazy() {
+        return new PromocionLazy(id, nombre, descripcion, fecha_inicio, fecha_fin, descuento, fechaRegistro);
     }
 }
