@@ -6,7 +6,6 @@ import com.upc.cuptap_restapi.Controllers.Providers.Providers.DController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.UController;
 import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
-import com.upc.cuptap_restapi.Models.DTO.DTORequest.DetallesPedidoRequest;
 import com.upc.cuptap_restapi.Models.Entities.DetallesPedido;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Services.Logic.DetallesPedidoService;
@@ -32,6 +31,7 @@ public class DetallesPedidoController implements CRUDControllerInstance<Detalles
     DetallesPedidoService serv;
     @Autowired
     ReconstructMiddleware reconstruct;
+
     public DetallesPedidoController(DetallesPedidoService serv) {
         this.serv = serv;
     }
@@ -81,28 +81,6 @@ public class DetallesPedidoController implements CRUDControllerInstance<Detalles
         return Read().GetAll(page_index, limit, fecha, isLazy);
     }
 
-    @PostMapping("")
-    @Operation(summary = "Permite registrar detalles del pedido")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Se agregó correctamente el detalle del pedido"),
-            @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
-    })
-    public ResponseEntity<Response<DetallesPedido>> Save(@RequestBody DetallesPedidoRequest entity) {
-        return Persist().Save(reconstruct.reconstruct(entity));
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Permite actualizar los datos de los detalles del pedido por medio de su ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Se actualizo correctamente los datos de los detalles del pedido"),
-            @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
-            @ApiResponse(responseCode = "404", description = "No se encontro el detalle del pedido por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
-    })
-    public ResponseEntity<Response<Map<String, DetallesPedido>>> Update(@PathVariable Long id, @RequestBody DetallesPedidoRequest new_entity) {
-        return Modify().Update(reconstruct.reconstruct(new_entity), id);
-    }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Permite eliminar detalles del pedido por ID")

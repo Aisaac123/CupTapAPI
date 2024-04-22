@@ -33,6 +33,7 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
     PagoService serv;
     @Autowired
     ReconstructMiddleware reconstruct;
+
     public PagoController(PagoService serv) {
         this.serv = serv;
     }

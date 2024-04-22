@@ -31,6 +31,7 @@ public class PromocionController implements CRUDControllerInstance<Promocion, Lo
     PromocionService serv;
     @Autowired
     ReconstructMiddleware reconstruct;
+
     public PromocionController(PromocionService serv) {
         this.serv = serv;
     }

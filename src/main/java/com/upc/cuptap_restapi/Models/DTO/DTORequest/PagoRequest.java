@@ -2,7 +2,6 @@ package com.upc.cuptap_restapi.Models.DTO.DTORequest;
 
 import com.upc.cuptap_restapi.Models.Entities.Pago;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
-import com.upc.cuptap_restapi.Models.Entities.Usuario;
 import com.upc.cuptap_restapi.Models.Interfaces.DTO.RequestDTO;
 import jakarta.validation.constraints.NotNull;
 

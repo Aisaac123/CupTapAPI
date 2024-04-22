@@ -57,7 +57,6 @@ public class Usuario implements CrudEntity {
     List<Pedido> pedidos;
 
 
-
     @NoUpdate
     @Column(nullable = false)
     LocalDateTime fechaRegistro = LocalDateTime.now();

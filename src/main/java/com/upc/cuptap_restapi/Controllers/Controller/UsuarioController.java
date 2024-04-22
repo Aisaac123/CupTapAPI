@@ -4,7 +4,6 @@ import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
 import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CControllerInstance;
 import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.RControllerInstance;
-import com.upc.cuptap_restapi.Models.DTO.DTORequest.DetallesPedidoRequestNoId;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoAndDetallesRequest;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoAndDetallesRequestNoId;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.UsuarioRequest;
@@ -15,6 +14,7 @@ import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
 import com.upc.cuptap_restapi.Services.Logic.PedidoService;
 import com.upc.cuptap_restapi.Services.Logic.UsuarioService;
 import com.upc.cuptap_restapi.Services.Middlewares.ReconstructMiddleware;
+import com.upc.cuptap_restapi.Services.Middlewares.Validations.Requests.PedidoRequestValidation;
 import com.upc.cuptap_restapi.Services.Utils.Options.ReadingOptions;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -172,7 +172,7 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
     public ResponseEntity<Response<Pedido>> AddPedidos(@RequestBody PedidoAndDetallesRequestNoId pedidoDTO, @PathVariable String cedula) {
         try {
             for (var item : pedidoDTO.detalles()) {
-                if (!DetallesPedidoRequestNoId.Validate(item))
+                if (!PedidoRequestValidation.Validate(item))
                     return new ResponseEntity<>(ResponseBuilder
                             .Fail("hay elementos que tienen un producto y un combo a la vez, por favor revisa la inconsistencia"),
                             HttpStatus.BAD_REQUEST);

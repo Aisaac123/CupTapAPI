@@ -52,6 +52,6 @@ public class Pago implements CrudEntity {
         return new PagoLazy(id, valor,
                 new PagoLazy.Pedido(pedido.getId(), pedido.fechaRegistro, pedido.total,
                         new PagoLazy.Pedido.Usuario(pedido.getUsuario().getId(), pedido.getUsuario().cedula,
-                                pedido.usuario.nombre, pedido.usuario.apellidos, pedido.usuario.telefono, pedido.usuario.username)),getFechaRegistro());
+                                pedido.usuario.nombre, pedido.usuario.apellidos, pedido.usuario.telefono, pedido.usuario.username)), getFechaRegistro());
     }
 }

@@ -71,10 +71,20 @@ public class ReconstructMiddleware {
             if (detalle.getProducto() != null && detalle.getProducto().getNombre() != null) {
                 detalle.setCombo(null);
                 detalle.setProducto(productosMap.get(i.get()));
+                if (detalle.getCantidad() > detalle.getProducto().getStock()) try {
+                    throw new Exception("No hay suficiente productos en stock de: " + detalle.getProducto().getNombre() + "para este pedido");
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
             if (detalle.getCombo() != null && detalle.getCombo().getNombre() != null) {
                 detalle.setPedido(null);
                 detalle.setCombo(combosMap.get(i.get()));
+                if (detalle.getCantidad() > detalle.getCombo().getStock()) try {
+                    throw new Exception("No hay suficiente combos en stock de: " + detalle.getProducto().getNombre()+ "para este pedido");
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
             detalle.setPedido(pedido);
             i.getAndIncrement();
@@ -90,13 +100,13 @@ public class ReconstructMiddleware {
         return combo;
     }
 
-    public DetallesPedido reconstruct(DetallesPedidoRequest requestDTO) {
-        var detalles = requestDTO.toEntity();
-        detalles.setPedido(pedidoDAO.findById(detalles.getPedido().getId()).orElse(null));
-        detalles.setCombo(comboDAO.findById(detalles.getCombo().getNombre()).orElse(null));
-        detalles.setProducto(productoDAO.findById(detalles.getProducto().getNombre()).orElse(null));
-        return detalles;
-    }
+//    public DetallesPedido reconstruct(DetallesPedidoRequestNoID requestDTO) {
+//        var detalles = requestDTO.toEntity();
+//        detalles.setPedido(pedidoDAO.findById(detalles.getPedido().getId()).orElse(null));
+//        detalles.setCombo(comboDAO.findById(detalles.getCombo().getNombre()).orElse(null));
+//        detalles.setProducto(productoDAO.findById(detalles.getProducto().getNombre()).orElse(null));
+//        return detalles;
+//    }
 
     public Pago reconstruct(PagoRequest requestDTO) {
         var pago = requestDTO.toEntity();

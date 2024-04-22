@@ -17,14 +17,14 @@ import java.util.stream.Collectors;
 
 
 public record PedidoAndDetallesRequest(@NotNull String usuarioCedula,
-                                       @NotNull Set<DetallesPedidoRequestNoId> detalles,
+                                       @NotNull Set<DetallesPedidoRequest> detalles,
                                        @NotNull String estadoNombre)
 
         implements Serializable, RequestDTO<Pedido> {
     @Override
     public Pedido toEntity() {
 
-        Set<DetallesPedido> detallesPedidos = detalles.stream().map(DetallesPedidoRequestNoId::toEntity).collect(Collectors.toSet());
+        Set<DetallesPedido> detallesPedidos = detalles.stream().map(DetallesPedidoRequest::toEntity).collect(Collectors.toSet());
         var estado = new Estado();
         estado.setNombre(estadoNombre);
         return new Pedido(new Usuario(usuarioCedula), estado, detallesPedidos);

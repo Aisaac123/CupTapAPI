@@ -10,7 +10,8 @@ import java.util.UUID;
 /**
  * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Pago}
  */
-public record PagoLazy(long id, double valor, Pedido pedido, LocalDateTime fechaRegistro) implements Serializable, LazyDTO<Pago> {
+public record PagoLazy(long id, double valor, Pedido pedido,
+                       LocalDateTime fechaRegistro) implements Serializable, LazyDTO<Pago> {
     /**
      * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Pedido}
      */

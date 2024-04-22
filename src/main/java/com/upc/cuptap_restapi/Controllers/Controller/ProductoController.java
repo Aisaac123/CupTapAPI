@@ -34,6 +34,7 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
     ProductoService serv;
     @Autowired
     ReconstructMiddleware reconstruct;
+
     public ProductoController(ProductoService serv) {
         this.serv = serv;
     }

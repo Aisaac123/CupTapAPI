@@ -63,6 +63,16 @@ public class DetallesPedido implements CrudEntity {
         this.combo = combo;
         this.producto = producto;
     }
+    public DetallesPedido(int cantidad, Combo combo, Producto producto) {
+        this.cantidad = cantidad;
+        this.combo = combo;
+        this.producto = producto;
+    }
+    public DetallesPedido(int cantidad, Producto producto) {
+        this.cantidad = cantidad;
+        this.producto = producto;
+        this.pedido = new Pedido();
+    }
 
     @Override
     public UpdateEntity cloneEntity() {

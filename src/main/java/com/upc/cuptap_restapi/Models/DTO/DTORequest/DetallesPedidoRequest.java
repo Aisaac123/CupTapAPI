@@ -5,27 +5,19 @@ import com.upc.cuptap_restapi.Models.Entities.DetallesPedido;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Entities.Producto;
 import com.upc.cuptap_restapi.Models.Interfaces.DTO.RequestDTO;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.io.Serializable;
 
 /**
- * DTO for {@link DetallesPedido}
+ * DTO for {@link com.upc.cuptap_restapi.Models.Entities.DetallesPedido}
  */
-
-
-public record DetallesPedidoRequest(@NotNull @Positive int cantidad, @NotNull Long pedidoId,
-                                    String comboNombre, String productoNombre)
-
-        implements Serializable, RequestDTO<DetallesPedido> {
-    public static boolean Validate(DetallesPedidoRequest detallesPedido) {
-        return !(detallesPedido.comboNombre != null && detallesPedido.productoNombre != null);
-    }
-
+public record DetallesPedidoRequest(
+        @Positive int cantidad,
+        String comboNombre,
+        String productoNombre) implements Serializable, RequestDTO<DetallesPedido> {
     @Override
     public DetallesPedido toEntity() {
-        return new DetallesPedido(cantidad, new Pedido(pedidoId), new Combo(comboNombre), new Producto(productoNombre));
+        return new DetallesPedido(cantidad, new Pedido(), new Combo(comboNombre), new Producto(productoNombre));
     }
 }
-
