@@ -1,28 +1,22 @@
 package com.upc.cuptap_restapi.Services.Logic;
 
 
-import com.upc.cuptap_restapi.Models.DTO.DTORequest.PagoRequest;
 import com.upc.cuptap_restapi.Models.Entities.Pago;
 import com.upc.cuptap_restapi.Repositories.DAO.PagoDAO;
-import com.upc.cuptap_restapi.Repositories.DAO.UsuarioDAO;
-import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CRUDServiceInstance;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.CService;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.DService;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.RService;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.UService;
-import com.upc.cuptap_restapi.Services.Utils.Options.Reconstruct;
+import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CRUDServiceInstance;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PagoService implements CRUDServiceInstance<Pago, Long>, Reconstruct<Pago, PagoRequest> {
+public class PagoService implements CRUDServiceInstance<Pago, Long> {
     final
     PagoDAO rep;
-    private final UsuarioDAO usuarioDAO;
 
-    public PagoService(PagoDAO rep,
-                       UsuarioDAO usuarioDAO) {
+    public PagoService(PagoDAO rep) {
         this.rep = rep;
-        this.usuarioDAO = usuarioDAO;
     }
 
     @Override
@@ -45,11 +39,5 @@ public class PagoService implements CRUDServiceInstance<Pago, Long>, Reconstruct
         return new UService<>(rep);
     }
 
-    @Override
-    public Pago Reconstruct(PagoRequest requestDTO) {
-        var pago = requestDTO.toEntity();
-        pago.setUsuario(usuarioDAO.findById(pago.getUsuario().getId()).orElse(null));
 
-        return pago;
-    }
 }

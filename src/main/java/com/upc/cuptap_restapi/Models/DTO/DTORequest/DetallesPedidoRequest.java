@@ -19,12 +19,13 @@ public record DetallesPedidoRequest(@NotNull @Positive int cantidad, @NotNull Lo
                                     String comboNombre, String productoNombre)
 
         implements Serializable, RequestDTO<DetallesPedido> {
+    public static boolean Validate(DetallesPedidoRequest detallesPedido) {
+        return !(detallesPedido.comboNombre != null && detallesPedido.productoNombre != null);
+    }
+
     @Override
     public DetallesPedido toEntity() {
         return new DetallesPedido(cantidad, new Pedido(pedidoId), new Combo(comboNombre), new Producto(productoNombre));
-    }
-    public static boolean Validate(DetallesPedidoRequest detallesPedido){
-        return !(detallesPedido.comboNombre != null && detallesPedido.productoNombre != null);
     }
 }
 

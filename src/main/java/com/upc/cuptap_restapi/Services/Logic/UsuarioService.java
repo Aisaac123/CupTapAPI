@@ -1,50 +1,41 @@
 package com.upc.cuptap_restapi.Services.Logic;
 
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.UsuarioLazy;
-import com.upc.cuptap_restapi.Models.DTO.DTORequest.DetallesPedidoRequestNoId;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoAndDetallesRequest;
-import com.upc.cuptap_restapi.Models.DTO.DTORequest.UsuarioRequest;
-import com.upc.cuptap_restapi.Models.Entities.*;
+import com.upc.cuptap_restapi.Models.Entities.Pedido;
+import com.upc.cuptap_restapi.Models.Entities.Usuario;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
-import com.upc.cuptap_restapi.Repositories.DAO.EstadoDAO;
 import com.upc.cuptap_restapi.Repositories.DAO.PedidoDAO;
-import com.upc.cuptap_restapi.Repositories.DAO.ProductoDAO;
 import com.upc.cuptap_restapi.Repositories.DAO.UsuarioDAO;
-import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CRUDServiceInstance;
+import com.upc.cuptap_restapi.Services.Middlewares.ReconstructMiddleware;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.CService;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.DService;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.RService;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.UService;
+import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CRUDServiceInstance;
 import com.upc.cuptap_restapi.Services.Utils.Options.ParamOptions;
 import com.upc.cuptap_restapi.Services.Utils.Options.ReadingOptions;
-import com.upc.cuptap_restapi.Services.Utils.Options.Reconstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
-public class UsuarioService implements CRUDServiceInstance<Usuario, UUID>, Reconstruct<Usuario, UsuarioRequest> {
+public class UsuarioService implements CRUDServiceInstance<Usuario, UUID> {
 
-    private final UsuarioDAO rep;
-    private final EstadoDAO estadoDAO;
     final
     PedidoService pedidoService;
     final
     PedidoDAO pedidoDAO;
-    private final ProductoDAO productoDAO;
+    final
+    ReconstructMiddleware reconstruct;
+    private final UsuarioDAO rep;
 
-    public UsuarioService(UsuarioDAO repository,
-                          EstadoDAO estadoDAO, PedidoDAO pedidoDAO,
-                          ProductoDAO productoDAO, PedidoService pedidoService) {
+    public UsuarioService(UsuarioDAO repository, PedidoDAO pedidoDAO, PedidoService pedidoService, ReconstructMiddleware reconstruct) {
         rep = repository;
-        this.estadoDAO = estadoDAO;
         this.pedidoDAO = pedidoDAO;
-        this.productoDAO = productoDAO;
         this.pedidoService = pedidoService;
+        this.reconstruct = reconstruct;
     }
 
     @Override
@@ -143,8 +134,7 @@ public class UsuarioService implements CRUDServiceInstance<Usuario, UUID>, Recon
         try {
             Usuario user = rep.findByCedula(pedidoDTO.usuarioCedula());
             if (user == null) return ResponseBuilder.Fail("No se ha encontrado el usuario por su cedula");
-
-            var pedido = pedidoService.Reconstruct(pedidoDTO);
+            var pedido = reconstruct.reconstruct(pedidoDTO, user);
             user.addPedido(pedido);
             rep.save(user);
 
@@ -154,10 +144,5 @@ public class UsuarioService implements CRUDServiceInstance<Usuario, UUID>, Recon
         }
     }
 
-
-    @Override
-    public Usuario Reconstruct(UsuarioRequest requestDTO) {
-        return requestDTO.toEntity();
-    }
 }
 

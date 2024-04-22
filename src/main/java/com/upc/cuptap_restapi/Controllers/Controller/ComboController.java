@@ -1,20 +1,22 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.DController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.UController;
+import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.ComboRequest;
 import com.upc.cuptap_restapi.Models.Entities.Combo;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Services.Logic.ComboService;
+import com.upc.cuptap_restapi.Services.Middlewares.ReconstructMiddleware;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +30,9 @@ public class ComboController implements CRUDControllerInstance<Combo, String> {
 
     final
     ComboService serv;
+
+    @Autowired
+    ReconstructMiddleware reconstruct;
 
     public ComboController(ComboService serv) {
         this.serv = serv;
@@ -86,7 +91,7 @@ public class ComboController implements CRUDControllerInstance<Combo, String> {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Combo>> Save(@RequestBody ComboRequest combo) {
-        return Persist().Save(serv.Reconstruct(combo));
+        return Persist().Save(reconstruct.reconstruct(combo));
     }
 
     @PutMapping("/{id}")
@@ -98,7 +103,7 @@ public class ComboController implements CRUDControllerInstance<Combo, String> {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Combo>>> Update(@PathVariable String id, @RequestBody ComboRequest new_combo) {
-        return Modify().Update(serv.Reconstruct(new_combo), id);
+        return Modify().Update(reconstruct.reconstruct(new_combo), id);
     }
 
     @DeleteMapping("/{id}")

@@ -3,8 +3,6 @@ package com.upc.cuptap_restapi.Models.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.ComboLazy;
-import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.ProductoLazy;
-import com.upc.cuptap_restapi.Models.Interfaces.DTO.LazyDTO;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
 import com.upc.cuptap_restapi.Models.Utils.NoUpdate;
@@ -15,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "Combos")
@@ -91,9 +88,9 @@ public class Combo implements CrudEntity {
     public ComboLazy toLazy() {
         var p = getPromocion();
         if (p != null)
-        return new ComboLazy(nombre, descripcion, precio, stock, venta_activa,
-                new ComboLazy.Promocion(p.id, p.nombre, p.descripcion, p.fecha_inicio, p.fecha_fin, p.descuento), fechaRegistro, imagen);
-        return new ComboLazy(nombre, descripcion, precio, stock, venta_activa,null, fechaRegistro, imagen);
+            return new ComboLazy(nombre, descripcion, precio, stock, venta_activa,
+                    new ComboLazy.Promocion(p.id, p.nombre, p.descripcion, p.fecha_inicio, p.fecha_fin, p.descuento), fechaRegistro, imagen);
+        return new ComboLazy(nombre, descripcion, precio, stock, venta_activa, null, fechaRegistro, imagen);
 
     }
 }

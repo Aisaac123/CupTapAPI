@@ -1,21 +1,23 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
 
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.DController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.UController;
+import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.DetallesPedidoRequest;
 import com.upc.cuptap_restapi.Models.Entities.DetallesPedido;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Services.Logic.DetallesPedidoService;
+import com.upc.cuptap_restapi.Services.Middlewares.ReconstructMiddleware;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +30,8 @@ import java.util.Map;
 public class DetallesPedidoController implements CRUDControllerInstance<DetallesPedido, Long> {
     final
     DetallesPedidoService serv;
-
+    @Autowired
+    ReconstructMiddleware reconstruct;
     public DetallesPedidoController(DetallesPedidoService serv) {
         this.serv = serv;
     }
@@ -60,7 +63,7 @@ public class DetallesPedidoController implements CRUDControllerInstance<Detalles
             @ApiResponse(responseCode = "404", description = "No se encontro el detalle del pedido por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<DetallesPedido>>GetById(@PathVariable Long id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
+    public ResponseEntity<Response<DetallesPedido>> GetById(@PathVariable Long id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
         return Read().GetById(id, isLazy);
     }
 
@@ -86,7 +89,7 @@ public class DetallesPedidoController implements CRUDControllerInstance<Detalles
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<DetallesPedido>> Save(@RequestBody DetallesPedidoRequest entity) {
-        return Persist().Save(serv.Reconstruct(entity));
+        return Persist().Save(reconstruct.reconstruct(entity));
     }
 
     @PutMapping("/{id}")
@@ -98,7 +101,7 @@ public class DetallesPedidoController implements CRUDControllerInstance<Detalles
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, DetallesPedido>>> Update(@PathVariable Long id, @RequestBody DetallesPedidoRequest new_entity) {
-        return Modify().Update(serv.Reconstruct(new_entity), id);
+        return Modify().Update(reconstruct.reconstruct(new_entity), id);
     }
 
     @DeleteMapping("/{id}")

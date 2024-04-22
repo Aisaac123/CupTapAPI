@@ -6,7 +6,6 @@ import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Entities.Usuario;
 import com.upc.cuptap_restapi.Models.Interfaces.DTO.RequestDTO;
 import jakarta.validation.constraints.NotNull;
-import org.apache.commons.lang3.Validate;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -27,7 +26,7 @@ public record PedidoAndDetallesRequestNoId(@NotNull Set<DetallesPedidoRequestNoI
         Set<DetallesPedido> detallesPedidos = detalles.stream().map(DetallesPedidoRequestNoId::toEntity).collect(Collectors.toSet());
         var estado = new Estado();
         estado.setNombre(estadoNombre);
-        return new Pedido(new Usuario(),estado, detallesPedidos);
+        return new Pedido(new Usuario(), estado, detallesPedidos);
     }
 
 }

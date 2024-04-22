@@ -16,6 +16,7 @@ public interface IRService<E extends ReadEntity, ID extends Comparable<ID>> exte
     Response<List> GetAll(ParamOptions options);
 
     Response<E> GetById(ID id, ParamOptions options);
+
     Response GetById(ID id);
 
 

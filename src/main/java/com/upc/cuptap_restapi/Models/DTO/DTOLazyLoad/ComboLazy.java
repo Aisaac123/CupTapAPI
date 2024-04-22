@@ -5,7 +5,6 @@ import com.upc.cuptap_restapi.Models.Interfaces.DTO.LazyDTO;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Combo}

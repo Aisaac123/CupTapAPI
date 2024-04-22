@@ -8,7 +8,6 @@ import com.upc.cuptap_restapi.Models.Interfaces.DTO.RequestDTO;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,6 +27,6 @@ public record PedidoAndDetallesRequest(@NotNull String usuarioCedula,
         Set<DetallesPedido> detallesPedidos = detalles.stream().map(DetallesPedidoRequestNoId::toEntity).collect(Collectors.toSet());
         var estado = new Estado();
         estado.setNombre(estadoNombre);
-        return new Pedido(new Usuario(usuarioCedula),estado, detallesPedidos);
+        return new Pedido(new Usuario(usuarioCedula), estado, detallesPedidos);
     }
 }

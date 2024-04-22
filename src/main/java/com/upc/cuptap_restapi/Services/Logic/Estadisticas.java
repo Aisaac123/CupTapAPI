@@ -14,6 +14,7 @@ public class Estadisticas {
     private final UsuarioDAO usuarioDAO;
     private final ProductoDAO productoDAO;
     private final ComboDAO comboDAO;
+
     private Estadisticas(PedidoDAO pedidoDAO,
                          UsuarioDAO usuarioDAO,
                          ProductoDAO productoDAO,

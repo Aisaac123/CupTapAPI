@@ -1,7 +1,6 @@
 package com.upc.cuptap_restapi.Models.Entities;
 
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.PagoLazy;
-import com.upc.cuptap_restapi.Models.Interfaces.DTO.LazyDTO;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
 import com.upc.cuptap_restapi.Models.Utils.NoUpdate;
@@ -28,15 +27,15 @@ public class Pago implements CrudEntity {
     double valor;
     @NoUpdate
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "usuario_id", nullable = false)
-    Usuario usuario;
+    @JoinColumn(name = "pedido_id", nullable = false)
+    Pedido pedido;
     @NoUpdate
     @Column(nullable = false)
     LocalDateTime fechaRegistro = LocalDateTime.now();
 
-    public Pago(double valor, Usuario usuario) {
+    public Pago(double valor, Pedido pedido) {
         this.valor = valor;
-        this.usuario = usuario;
+        this.pedido = pedido;
     }
 
     @Override
@@ -51,6 +50,8 @@ public class Pago implements CrudEntity {
     @Override
     public PagoLazy toLazy() {
         return new PagoLazy(id, valor,
-                new PagoLazy.Usuario(usuario.id, usuario.cedula, usuario.nombre, usuario.apellidos, usuario.telefono), fechaRegistro);
+                new PagoLazy.Pedido(pedido.getId(), pedido.fechaRegistro, pedido.total,
+                        new PagoLazy.Pedido.Usuario(pedido.getUsuario().getId(), pedido.getUsuario().cedula,
+                                pedido.usuario.nombre, pedido.usuario.apellidos, pedido.usuario.telefono, pedido.usuario.username)),getFechaRegistro());
     }
 }

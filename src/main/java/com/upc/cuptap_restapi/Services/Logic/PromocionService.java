@@ -1,18 +1,16 @@
 package com.upc.cuptap_restapi.Services.Logic;
 
-import com.upc.cuptap_restapi.Models.DTO.DTORequest.PromocionRequest;
 import com.upc.cuptap_restapi.Models.Entities.Promocion;
 import com.upc.cuptap_restapi.Repositories.DAO.PromocionDAO;
-import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CRUDServiceInstance;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.CService;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.DService;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.RService;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.UService;
-import com.upc.cuptap_restapi.Services.Utils.Options.Reconstruct;
+import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CRUDServiceInstance;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PromocionService implements CRUDServiceInstance<Promocion, Long>, Reconstruct<Promocion, PromocionRequest> {
+public class PromocionService implements CRUDServiceInstance<Promocion, Long> {
 
     final
     PromocionDAO rep;
@@ -41,8 +39,5 @@ public class PromocionService implements CRUDServiceInstance<Promocion, Long>, R
         return new UService<>(rep);
     }
 
-    @Override
-    public Promocion Reconstruct(PromocionRequest requestDTO) {
-        return requestDTO.toEntity();
-    }
+
 }

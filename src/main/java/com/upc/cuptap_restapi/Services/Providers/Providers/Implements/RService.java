@@ -67,12 +67,13 @@ public class RService<E extends ReadEntity, ID extends Comparable<ID>> implement
     public Response<E> GetById(ID id) {
         try {
             E data = repository.findById(id).orElse(null);
-            if(data == null) return ResponseBuilder.Fail("No se ha encontrado el elemento en la base de datos");
+            if (data == null) return ResponseBuilder.Fail("No se ha encontrado el elemento en la base de datos");
             return new ResponseBuilder<E>().withSuccess(true).withData(data);
         } catch (Exception e) {
             return ResponseBuilder.Error(e);
         }
     }
+
     @Override
     public Response GetById(ID id, ParamOptions options) {
         try {

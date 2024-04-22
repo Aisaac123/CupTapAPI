@@ -1,20 +1,22 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.DController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.UController;
+import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PromocionRequest;
 import com.upc.cuptap_restapi.Models.Entities.Promocion;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Services.Logic.PromocionService;
+import com.upc.cuptap_restapi.Services.Middlewares.ReconstructMiddleware;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +29,8 @@ import java.util.Map;
 public class PromocionController implements CRUDControllerInstance<Promocion, Long> {
     final
     PromocionService serv;
-
+    @Autowired
+    ReconstructMiddleware reconstruct;
     public PromocionController(PromocionService serv) {
         this.serv = serv;
     }
@@ -62,6 +65,7 @@ public class PromocionController implements CRUDControllerInstance<Promocion, Lo
     public ResponseEntity<Response<Promocion>> GetById(@PathVariable Long id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
         return Read().GetById(id, isLazy);
     }
+
     @GetMapping("")
     @Operation(summary = "Consulta de promociones (Paginacion)")
     @ApiResponses(value = {
@@ -84,7 +88,7 @@ public class PromocionController implements CRUDControllerInstance<Promocion, Lo
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Promocion>> Save(@RequestBody PromocionRequest entity) {
-        return Persist().Save(serv.Reconstruct(entity));
+        return Persist().Save(reconstruct.reconstruct(entity));
     }
 
     @PutMapping("/{id}")
@@ -96,7 +100,7 @@ public class PromocionController implements CRUDControllerInstance<Promocion, Lo
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Promocion>>> Update(@PathVariable Long id, @RequestBody PromocionRequest new_entity) {
-        return Modify().Update(serv.Reconstruct(new_entity), id);
+        return Modify().Update(reconstruct.reconstruct(new_entity), id);
     }
 
     @DeleteMapping("/{id}")

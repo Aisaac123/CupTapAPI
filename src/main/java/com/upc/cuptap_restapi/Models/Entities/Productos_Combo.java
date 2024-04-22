@@ -1,7 +1,5 @@
 package com.upc.cuptap_restapi.Models.Entities;
 
-import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.ComboLazy;
-import com.upc.cuptap_restapi.Models.Interfaces.DTO.HasLazy;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.CreateEntity;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.DeleteEnity;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;

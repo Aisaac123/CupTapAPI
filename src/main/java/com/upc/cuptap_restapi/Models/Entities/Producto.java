@@ -2,7 +2,6 @@ package com.upc.cuptap_restapi.Models.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.ProductoLazy;
-import com.upc.cuptap_restapi.Models.Interfaces.DTO.LazyDTO;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
 import com.upc.cuptap_restapi.Models.Utils.NoUpdate;
@@ -89,8 +88,8 @@ public class Producto implements CrudEntity {
         var p = promocion;
         if (p != null)
             return new ProductoLazy(nombre, descripcion, precio, stock, venta_activa,
-                new ProductoLazy.Promocion(p.id, p.nombre, p.descripcion, p.fecha_inicio, p.fecha_fin, p.descuento),
-                imagen, fechaRegistro);
-        return new ProductoLazy(nombre, descripcion, precio, stock, venta_activa,null, imagen, fechaRegistro);
+                    new ProductoLazy.Promocion(p.id, p.nombre, p.descripcion, p.fecha_inicio, p.fecha_fin, p.descuento),
+                    imagen, fechaRegistro);
+        return new ProductoLazy(nombre, descripcion, precio, stock, venta_activa, null, imagen, fechaRegistro);
     }
 }

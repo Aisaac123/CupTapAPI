@@ -1,7 +1,6 @@
 package com.upc.cuptap_restapi.Models.DTO.DTORequest;
 
 import com.upc.cuptap_restapi.Models.Entities.Combo;
-import com.upc.cuptap_restapi.Models.Entities.Producto;
 import com.upc.cuptap_restapi.Models.Entities.Promocion;
 import com.upc.cuptap_restapi.Models.Interfaces.DTO.RequestDTO;
 import jakarta.validation.constraints.NotBlank;

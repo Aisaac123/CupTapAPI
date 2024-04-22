@@ -16,6 +16,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,6 +59,10 @@ public class Pedido implements CrudEntity {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     Set<DetallesPedido> detalles = new HashSet<>();
 
+    @Setter
+    @NoUpdate
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    List<Pago> pagos;
 
     // Relaciones 1 a n
 
@@ -91,14 +96,16 @@ public class Pedido implements CrudEntity {
 
     // Metodos
 
-    public void addDetalles(DetallesPedido detallesPedido){
+    public void addDetalles(DetallesPedido detallesPedido) {
         detallesPedido.setPedido(this);
         detalles.add(detallesPedido);
     }
-    public void addDetalles(Set<DetallesPedido> detallesPedidos){
+
+    public void addDetalles(Set<DetallesPedido> detallesPedidos) {
         var set = detallesPedidos.stream().peek(item -> item.setPedido(this)).collect(Collectors.toSet());
         detalles.addAll(set);
     }
+
     @Override
     public UpdateEntity cloneEntity() {
         try {
@@ -108,18 +115,19 @@ public class Pedido implements CrudEntity {
         }
     }
 
-    public Response validate(){
-        for (var item: this.getDetalles()) {
-            if (item.getCombo() == null){
+    public Response validate() {
+        for (var item : this.getDetalles()) {
+            if (item.getCombo() == null) {
                 if (item.getProducto().getStock() < item.getCantidad())
                     return ResponseBuilder.Fail("No hay suficiente en el stock del producto: " + item.getProducto().getNombre());
-            }else if (item.getProducto() == null){
+            } else if (item.getProducto() == null) {
                 if (item.getCombo().getStock() < item.getCantidad())
                     return ResponseBuilder.Fail("No hay suficiente en el stock del producto: " + item.getCombo().getNombre());
-            }else return ResponseBuilder.Fail("Error, hay producto y combo a la vez.");
+            } else return ResponseBuilder.Fail("Error, hay producto y combo a la vez.");
         }
         return ResponseBuilder.Success();
     }
+
     @Override
     public PedidoLazy toLazy() {
         return new PedidoLazy(id, fechaRegistro, total,

@@ -1,18 +1,20 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CControllerInstance;
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.RControllerInstance;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
-import com.upc.cuptap_restapi.Models.DTO.DTORequest.*;
-import com.upc.cuptap_restapi.Models.Entities.DetallesPedido;
-import com.upc.cuptap_restapi.Models.Entities.Estado;
+import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.RControllerInstance;
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.DetallesPedidoRequestNoId;
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoAndDetallesRequest;
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoAndDetallesRequestNoId;
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.UsuarioRequest;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Entities.Usuario;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
 import com.upc.cuptap_restapi.Services.Logic.PedidoService;
 import com.upc.cuptap_restapi.Services.Logic.UsuarioService;
+import com.upc.cuptap_restapi.Services.Middlewares.ReconstructMiddleware;
 import com.upc.cuptap_restapi.Services.Utils.Options.ReadingOptions;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,9 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -40,11 +40,11 @@ import java.util.stream.Collectors;
 public class UsuarioController implements CControllerInstance<Usuario, UUID>, RControllerInstance<Usuario, UUID> {
 
 
-    private final UsuarioService serv;
-
     final
     PedidoService pedidoServ;
-
+    private final UsuarioService serv;
+    @Autowired
+    ReconstructMiddleware reconstruct;
 
     public UsuarioController(UsuarioService usuarioService, PedidoService pedidoServ) {
         serv = usuarioService;
@@ -83,7 +83,7 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Usuario>> Save(@RequestBody UsuarioRequest usuario) {
-        return Persist().Save(serv.Reconstruct(usuario));
+        return Persist().Save(reconstruct.reconstruct(usuario));
     }
 
 
@@ -100,7 +100,7 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
     })
     public ResponseEntity<Response<Map<String, Usuario>>> PutByCedula(@PathVariable String cedula, @RequestBody UsuarioRequest new_user, @RequestParam(value = "lazy", required = false) boolean isLazy) {
         try {
-            var response = serv.UpdateByCedula(serv.Reconstruct(new_user), cedula);
+            var response = serv.UpdateByCedula(reconstruct.reconstruct(new_user), cedula);
             HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(response, status);
         } catch (Exception e) {
@@ -171,7 +171,7 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
     })
     public ResponseEntity<Response<Pedido>> AddPedidos(@RequestBody PedidoAndDetallesRequestNoId pedidoDTO, @PathVariable String cedula) {
         try {
-            for (var item : pedidoDTO.detalles()){
+            for (var item : pedidoDTO.detalles()) {
                 if (!DetallesPedidoRequestNoId.Validate(item))
                     return new ResponseEntity<>(ResponseBuilder
                             .Fail("hay elementos que tienen un producto y un combo a la vez, por favor revisa la inconsistencia"),

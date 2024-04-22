@@ -56,10 +56,7 @@ public class Usuario implements CrudEntity {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<Pedido> pedidos;
 
-    @Setter
-    @NoUpdate
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    List<Pago> pagos;
+
 
     @NoUpdate
     @Column(nullable = false)
@@ -78,7 +75,7 @@ public class Usuario implements CrudEntity {
         this.cedula = cedula;
     }
 
-    public void addPedido(Pedido pedido){
+    public void addPedido(Pedido pedido) {
         pedido.setUsuario(this);
         pedidos.add(pedido);
     }
