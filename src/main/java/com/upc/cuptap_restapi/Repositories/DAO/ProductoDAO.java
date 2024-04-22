@@ -16,5 +16,5 @@ import java.util.Set;
 public interface ProductoDAO extends GlobalRepository<Producto, String> {
 
     @Query("SELECT p FROM Productos p WHERE p.nombre IN :nombres")
-    Map<String, Producto> findByIds(@Param("nombres") Set<String> nombres);
+    List<Producto> findByIds(@Param("nombres") Set<String> nombres);
 }

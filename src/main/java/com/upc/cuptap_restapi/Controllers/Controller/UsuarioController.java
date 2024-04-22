@@ -6,6 +6,7 @@ import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.*;
 import com.upc.cuptap_restapi.Models.Entities.DetallesPedido;
+import com.upc.cuptap_restapi.Models.Entities.Estado;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Entities.Usuario;
 import com.upc.cuptap_restapi.Models.Utils.Response;
@@ -168,9 +169,16 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
             @ApiResponse(responseCode = "404", description = "No se encontro el usuario por cedula", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Pedido>> AddPedidos(@RequestBody Set<DetallesPedidoRequestNoId> detallesPedidoRequests, @PathVariable String cedula) {
+    public ResponseEntity<Response<Pedido>> AddPedidos(@RequestBody PedidoAndDetallesRequestNoId pedidoDTO, @PathVariable String cedula) {
         try {
-            var response = serv.AddPedidoToUsuario(cedula, detallesPedidoRequests.stream().map(DetallesPedidoRequestNoId::toEntity).collect(Collectors.toSet()));
+            for (var item : pedidoDTO.detalles()){
+                if (!DetallesPedidoRequestNoId.Validate(item))
+                    return new ResponseEntity<>(ResponseBuilder
+                            .Fail("hay elementos que tienen un producto y un combo a la vez, por favor revisa la inconsistencia"),
+                            HttpStatus.BAD_REQUEST);
+            }
+            PedidoAndDetallesRequest pedidoRequest = new PedidoAndDetallesRequest(cedula, pedidoDTO.detalles(), pedidoDTO.estadoNombre());
+            var response = serv.AddPedidoToUsuario(pedidoRequest);
             HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(response, status);
         } catch (Exception e) {

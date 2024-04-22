@@ -15,6 +15,6 @@ import java.util.Set;
 public interface ComboDAO extends GlobalRepository<Combo, String> {
 
     @Query("SELECT c FROM Combos c WHERE c.nombre IN :nombres")
-    Map<String, Combo> findByIds(@Param("nombres") Set<String> nombres);
+    List<Combo> findByIds(@Param("nombres") Set<String> nombres);
 
 }

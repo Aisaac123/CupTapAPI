@@ -24,4 +24,8 @@ public interface GlobalRepository<T extends Entity, ID extends Comparable<ID>> e
     @Query("SELECT e FROM #{#entityName} e WHERE e.fechaRegistro >= :fecha")
     List<T> findAllByFechaRegistro(@Param("fecha") LocalDateTime fecha);
 
+    @Query("SELECT e FROM #{#entityName} e")
+
+    List<T> findAllLazy();
+
 }

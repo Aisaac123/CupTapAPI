@@ -87,8 +87,10 @@ public class Producto implements CrudEntity {
     @Override
     public ProductoLazy toLazy() {
         var p = promocion;
-        return new ProductoLazy(nombre, descripcion, precio, stock, venta_activa,
+        if (p != null)
+            return new ProductoLazy(nombre, descripcion, precio, stock, venta_activa,
                 new ProductoLazy.Promocion(p.id, p.nombre, p.descripcion, p.fecha_inicio, p.fecha_fin, p.descuento),
                 imagen, fechaRegistro);
+        return new ProductoLazy(nombre, descripcion, precio, stock, venta_activa,null, imagen, fechaRegistro);
     }
 }

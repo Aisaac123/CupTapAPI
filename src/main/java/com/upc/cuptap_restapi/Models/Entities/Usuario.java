@@ -78,6 +78,11 @@ public class Usuario implements CrudEntity {
         this.cedula = cedula;
     }
 
+    public void addPedido(Pedido pedido){
+        pedido.setUsuario(this);
+        pedidos.add(pedido);
+    }
+
     @Override
     public UpdateEntity cloneEntity() {
         try {

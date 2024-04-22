@@ -6,6 +6,8 @@ import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.PedidoLazy;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
 import com.upc.cuptap_restapi.Models.Utils.NoUpdate;
+import com.upc.cuptap_restapi.Models.Utils.Response;
+import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +17,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity(name = "Pedidos")
@@ -31,6 +34,7 @@ public class Pedido implements CrudEntity {
     @Column(nullable = false)
     @Setter
     LocalDateTime fechaRegistro = LocalDateTime.now();
+
     @Column(nullable = false)
     double total;
 
@@ -66,6 +70,7 @@ public class Pedido implements CrudEntity {
         this.detalles = detalles;
     }
 
+
     // Relaciones n a 1
 
 
@@ -83,8 +88,17 @@ public class Pedido implements CrudEntity {
         this.usuario = usuario;
         this.estado = estado;
     }
+
     // Metodos
 
+    public void addDetalles(DetallesPedido detallesPedido){
+        detallesPedido.setPedido(this);
+        detalles.add(detallesPedido);
+    }
+    public void addDetalles(Set<DetallesPedido> detallesPedidos){
+        var set = detallesPedidos.stream().peek(item -> item.setPedido(this)).collect(Collectors.toSet());
+        detalles.addAll(set);
+    }
     @Override
     public UpdateEntity cloneEntity() {
         try {
@@ -94,6 +108,18 @@ public class Pedido implements CrudEntity {
         }
     }
 
+    public Response validate(){
+        for (var item: this.getDetalles()) {
+            if (item.getCombo() == null){
+                if (item.getProducto().getStock() < item.getCantidad())
+                    return ResponseBuilder.Fail("No hay suficiente en el stock del producto: " + item.getProducto().getNombre());
+            }else if (item.getProducto() == null){
+                if (item.getCombo().getStock() < item.getCantidad())
+                    return ResponseBuilder.Fail("No hay suficiente en el stock del producto: " + item.getCombo().getNombre());
+            }else return ResponseBuilder.Fail("Error, hay producto y combo a la vez.");
+        }
+        return ResponseBuilder.Success();
+    }
     @Override
     public PedidoLazy toLazy() {
         return new PedidoLazy(id, fechaRegistro, total,

@@ -18,6 +18,15 @@ public class ResponseBuilder<T> extends Response<T> {
         return (Response<T>) new ResponseBuilder().withMsg(fail_message).withSuccess(false);
     }
 
+    public static <T> Response<T> Success(String succes) {
+        return (Response<T>) new ResponseBuilder().withMsg(succes).withSuccess(false);
+    }
+
+    public static <T> Response<T> Success() {
+        return (Response<T>) new ResponseBuilder().withSuccess(true);
+    }
+
+
     public ResponseBuilder<T> withMsg(String value) {
         msg = value;
         return this;

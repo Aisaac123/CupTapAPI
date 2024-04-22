@@ -1,15 +1,15 @@
 package com.upc.cuptap_restapi.Services.Logic;
 
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.UsuarioLazy;
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.DetallesPedidoRequestNoId;
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoAndDetallesRequest;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.UsuarioRequest;
-import com.upc.cuptap_restapi.Models.Entities.DetallesPedido;
-import com.upc.cuptap_restapi.Models.Entities.Estado;
-import com.upc.cuptap_restapi.Models.Entities.Pedido;
-import com.upc.cuptap_restapi.Models.Entities.Usuario;
+import com.upc.cuptap_restapi.Models.Entities.*;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
 import com.upc.cuptap_restapi.Repositories.DAO.EstadoDAO;
 import com.upc.cuptap_restapi.Repositories.DAO.PedidoDAO;
+import com.upc.cuptap_restapi.Repositories.DAO.ProductoDAO;
 import com.upc.cuptap_restapi.Repositories.DAO.UsuarioDAO;
 import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CRUDServiceInstance;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.CService;
@@ -21,6 +21,7 @@ import com.upc.cuptap_restapi.Services.Utils.Options.ReadingOptions;
 import com.upc.cuptap_restapi.Services.Utils.Options.Reconstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,16 +30,21 @@ import java.util.stream.Collectors;
 public class UsuarioService implements CRUDServiceInstance<Usuario, UUID>, Reconstruct<Usuario, UsuarioRequest> {
 
     private final UsuarioDAO rep;
-    private final EstadoService estadoDAO;
-
+    private final EstadoDAO estadoDAO;
+    final
+    PedidoService pedidoService;
     final
     PedidoDAO pedidoDAO;
+    private final ProductoDAO productoDAO;
 
     public UsuarioService(UsuarioDAO repository,
-                          EstadoService estadoDAO, PedidoDAO pedidoDAO) {
+                          EstadoDAO estadoDAO, PedidoDAO pedidoDAO,
+                          ProductoDAO productoDAO, PedidoService pedidoService) {
         rep = repository;
         this.estadoDAO = estadoDAO;
         this.pedidoDAO = pedidoDAO;
+        this.productoDAO = productoDAO;
+        this.pedidoService = pedidoService;
     }
 
     @Override
@@ -133,29 +139,13 @@ public class UsuarioService implements CRUDServiceInstance<Usuario, UUID>, Recon
         }
     }
 
-    public Response<Pedido> AddPedidoToUsuario(String cedula, Set<DetallesPedido> detallesPedidos) {
+    public Response<Pedido> AddPedidoToUsuario(PedidoAndDetallesRequest pedidoDTO) {
         try {
-
-            Usuario user = rep.findByCedula(cedula);
+            Usuario user = rep.findByCedula(pedidoDTO.usuarioCedula());
             if (user == null) return ResponseBuilder.Fail("No se ha encontrado el usuario por su cedula");
 
-            // Create and save the Pedido entity first
-            Pedido pedido = new Pedido(user, estadoDAO.Read().GetById("estado 1").getData());
-            pedido = pedidoDAO.save(pedido);
-            Pedido finalPedido = pedido;
-
-            var detalles = detallesPedidos.stream().peek(item -> {
-                item.setPedido(finalPedido);
-                if (item.getCombo().getNombre()== null) item.setCombo(null);
-                else if (item.getProducto().getNombre() == null) item.setProducto(null);
-            }).collect(Collectors.toSet());
-            pedido.setDetalles(detalles);
-            pedidoDAO.save(pedido);
-
-            // Add the saved Pedido to the Usuario's pedidos collection
-            user.getPedidos().add(pedido);
-
-            // Save the Usuario entity with the updated pedidos collection
+            var pedido = pedidoService.Reconstruct(pedidoDTO);
+            user.addPedido(pedido);
             rep.save(user);
 
             return new ResponseBuilder<Pedido>().withSuccess(true).withData(pedido);

@@ -18,4 +18,7 @@ public record DetallesPedidoRequestNoId(@NotNull @Positive int cantidad,
     public DetallesPedido toEntity() {
         return new DetallesPedido(cantidad, new Pedido(), new Combo(comboNombre), new Producto(productoNombre));
     }
+    public static boolean Validate(DetallesPedidoRequestNoId detallesPedido){
+        return !(detallesPedido.comboNombre != null && detallesPedido.productoNombre != null);
+    }
 }
