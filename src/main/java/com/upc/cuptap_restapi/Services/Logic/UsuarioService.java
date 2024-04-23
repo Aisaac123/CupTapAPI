@@ -72,7 +72,7 @@ public class UsuarioService implements CRUDServiceInstance<Usuario, UUID> {
         try {
             Usuario user = rep.findByCedula(cedula);
             if (user != null) {
-                Usuario oldEnt = (Usuario) user.cloneEntity();
+                Usuario oldEnt = (Usuario) user.clone();
                 user.update(entity);
                 HashMap<String, Usuario> map = new HashMap<>();
                 map.put("old", oldEnt);

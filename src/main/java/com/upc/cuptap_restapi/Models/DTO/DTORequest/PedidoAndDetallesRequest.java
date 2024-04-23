@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Pedido}
+ * IDTO for {@link com.upc.cuptap_restapi.Models.Entities.Pedido}
  */
 
 

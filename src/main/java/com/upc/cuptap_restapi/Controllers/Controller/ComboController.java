@@ -31,11 +31,12 @@ public class ComboController implements CRUDControllerInstance<Combo, String> {
     final
     ComboService serv;
 
-    @Autowired
+    final
     ReconstructMiddleware reconstruct;
 
-    public ComboController(ComboService serv) {
+    public ComboController(ComboService serv, ReconstructMiddleware reconstruct) {
         this.serv = serv;
+        this.reconstruct = reconstruct;
     }
 
     @Override

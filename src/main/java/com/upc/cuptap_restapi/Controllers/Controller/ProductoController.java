@@ -32,11 +32,12 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
 
     final
     ProductoService serv;
-    @Autowired
+    final
     ReconstructMiddleware reconstruct;
 
-    public ProductoController(ProductoService serv) {
+    public ProductoController(ProductoService serv, ReconstructMiddleware reconstruct) {
         this.serv = serv;
+        this.reconstruct = reconstruct;
     }
 
     @Override

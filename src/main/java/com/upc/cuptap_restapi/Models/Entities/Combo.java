@@ -80,9 +80,12 @@ public class Combo implements CrudEntity {
     }
 
     @Override
-    public UpdateEntity cloneEntity() {
-        return null;
-    }
+    public Combo clone() {
+        try {
+            return (Combo) super.clone();
+        } catch (Exception e) {
+            return null;
+        }    }
 
     @Override
     public ComboLazy toLazy() {

@@ -107,9 +107,9 @@ public class Pedido implements CrudEntity {
     }
 
     @Override
-    public UpdateEntity cloneEntity() {
+    public Pedido clone() {
         try {
-            return (Pedido) this.clone();
+            return (Pedido) super.clone();
         } catch (CloneNotSupportedException e) {
             return null;
         }

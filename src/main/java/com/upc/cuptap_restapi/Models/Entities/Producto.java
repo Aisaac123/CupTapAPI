@@ -75,9 +75,9 @@ public class Producto implements CrudEntity {
     }
 
     @Override
-    public UpdateEntity cloneEntity() {
+    public Producto clone() {
         try {
-            return (Producto) this.clone();
+            return (Producto) super.clone();
         } catch (Exception e) {
             return null;
         }

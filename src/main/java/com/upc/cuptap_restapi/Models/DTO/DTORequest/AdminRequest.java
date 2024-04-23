@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * DTO for {@link Admin}
+ * IDTO for {@link Admin}
  */
 
 

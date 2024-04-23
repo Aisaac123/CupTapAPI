@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Positive;
 import java.io.Serializable;
 
 /**
- * DTO for {@link com.upc.cuptap_restapi.Models.Entities.DetallesPedido}
+ * IDTO for {@link com.upc.cuptap_restapi.Models.Entities.DetallesPedido}
  */
 public record DetallesPedidoRequest(
         @Positive int cantidad,

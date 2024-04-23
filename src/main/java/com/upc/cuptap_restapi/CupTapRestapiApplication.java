@@ -1,5 +1,7 @@
 package com.upc.cuptap_restapi;
 
+import com.upc.cuptap_restapi.Models.Entities.Usuario;
+import com.upc.cuptap_restapi.Repositories.DAO.UsuarioDAO;
 import com.upc.cuptap_restapi.Services.Logic.Estadisticas;
 import io.swagger.v3.oas.models.info.Info;
 import org.springdoc.core.models.GroupedOpenApi;
@@ -13,13 +15,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @SpringBootApplication
 @CrossOrigin(origins = "*")
 
-public class CupTapRestapiApplication implements CommandLineRunner {
+public class CupTapRestapiApplication {
 
 
-    private final Estadisticas estadisticas;
 
-    public CupTapRestapiApplication(Estadisticas estadisticas) {
-        this.estadisticas = estadisticas;
+    public CupTapRestapiApplication() {
     }
 
     public static void main(String[] args) {
@@ -37,10 +37,4 @@ public class CupTapRestapiApplication implements CommandLineRunner {
                 .build();
     }
 
-
-    @Override
-    public void run(String... args) throws Exception {
-//        System.out.println("Estadisticas.getInstance().TotalRecaudado() = " + estadisticas.totalRecaudado());
-//        System.out.println("Estadisticas.getInstance().CantPedidos() = " + estadisticas.cantPedidos());
-    }
 }

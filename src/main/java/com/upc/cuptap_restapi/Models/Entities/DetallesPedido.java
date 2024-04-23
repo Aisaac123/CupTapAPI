@@ -75,9 +75,9 @@ public class DetallesPedido implements CrudEntity {
     }
 
     @Override
-    public UpdateEntity cloneEntity() {
+    public UpdateEntity clone() {
         try {
-            return (DetallesPedido) this.clone();
+            return (DetallesPedido) super.clone();
         } catch (Exception e) {
             return null;
         }

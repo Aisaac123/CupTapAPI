@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Pago}
+ * IDTO for {@link com.upc.cuptap_restapi.Models.Entities.Pago}
  */
 
 

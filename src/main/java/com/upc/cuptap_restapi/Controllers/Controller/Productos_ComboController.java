@@ -32,11 +32,12 @@ public class Productos_ComboController implements
 
     final
     Productos_ComboService serv;
-    @Autowired
+    final
     ReconstructMiddleware reconstruct;
 
-    public Productos_ComboController(Productos_ComboService serv) {
+    public Productos_ComboController(Productos_ComboService serv, ReconstructMiddleware reconstruct) {
         this.serv = serv;
+        this.reconstruct = reconstruct;
     }
 
     @Override

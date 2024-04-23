@@ -66,9 +66,9 @@ public class Promocion implements CrudEntity {
     }
 
     @Override
-    public UpdateEntity cloneEntity() {
+    public Promocion clone() {
         try {
-            return (Promocion) this.clone();
+            return (Promocion) super.clone();
         } catch (CloneNotSupportedException e) {
             return null;
         }

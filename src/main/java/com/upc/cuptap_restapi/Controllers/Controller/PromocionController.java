@@ -29,11 +29,12 @@ import java.util.Map;
 public class PromocionController implements CRUDControllerInstance<Promocion, Long> {
     final
     PromocionService serv;
-    @Autowired
+    final
     ReconstructMiddleware reconstruct;
 
-    public PromocionController(PromocionService serv) {
+    public PromocionController(PromocionService serv, ReconstructMiddleware reconstruct) {
         this.serv = serv;
+        this.reconstruct = reconstruct;
     }
 
     @Override

@@ -37,18 +37,19 @@ import java.util.UUID;
 @RequestMapping("/v1/Usuarios")
 @Tag(name = "Usuarios", description = "Controlador del modulo de usuarios")
 
-public class UsuarioController implements CControllerInstance<Usuario, UUID>, RControllerInstance<Usuario, UUID> {
+public class UsuarioController implements CControllerInstance<Usuario, UUID>, RControllerInstance<Usuario, UUID>  {
 
 
     final
     PedidoService pedidoServ;
     private final UsuarioService serv;
-    @Autowired
+    final
     ReconstructMiddleware reconstruct;
 
-    public UsuarioController(UsuarioService usuarioService, PedidoService pedidoServ) {
+    public UsuarioController(UsuarioService usuarioService, PedidoService pedidoServ, ReconstructMiddleware reconstruct) {
         serv = usuarioService;
         this.pedidoServ = pedidoServ;
+        this.reconstruct = reconstruct;
     }
 
     @Override

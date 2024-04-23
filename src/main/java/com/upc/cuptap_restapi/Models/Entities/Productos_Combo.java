@@ -47,9 +47,9 @@ public class Productos_Combo implements CreateEntity, UpdateEntity, DeleteEnity 
     }
 
     @Override
-    public UpdateEntity cloneEntity() {
+    public Productos_Combo clone() {
         try {
-            return (Productos_Combo) this.clone();
+            return (Productos_Combo) super.clone();
         } catch (Exception e) {
             return null;
         }

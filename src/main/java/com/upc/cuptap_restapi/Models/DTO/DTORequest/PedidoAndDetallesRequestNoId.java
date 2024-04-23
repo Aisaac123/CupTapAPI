@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * DTO for {@link Pedido}
+ * IDTO for {@link Pedido}
  */
 
 

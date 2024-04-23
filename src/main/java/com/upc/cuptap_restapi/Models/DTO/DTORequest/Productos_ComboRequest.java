@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Positive;
 import java.io.Serializable;
 
 /**
- * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Productos_Combo}
+ * IDTO for {@link com.upc.cuptap_restapi.Models.Entities.Productos_Combo}
  */
 
 

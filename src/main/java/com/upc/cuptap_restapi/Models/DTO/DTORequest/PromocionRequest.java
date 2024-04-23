@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Promocion}
+ * IDTO for {@link com.upc.cuptap_restapi.Models.Entities.Promocion}
  */
 
 

@@ -31,11 +31,12 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
 
     final
     PagoService serv;
-    @Autowired
+    final
     ReconstructMiddleware reconstruct;
 
-    public PagoController(PagoService serv) {
+    public PagoController(PagoService serv, ReconstructMiddleware reconstruct) {
         this.serv = serv;
+        this.reconstruct = reconstruct;
     }
 
     @Override

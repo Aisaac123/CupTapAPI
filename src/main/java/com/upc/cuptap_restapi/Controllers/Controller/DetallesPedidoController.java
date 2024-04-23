@@ -29,11 +29,12 @@ import java.util.Map;
 public class DetallesPedidoController implements CRUDControllerInstance<DetallesPedido, Long> {
     final
     DetallesPedidoService serv;
-    @Autowired
+    final
     ReconstructMiddleware reconstruct;
 
-    public DetallesPedidoController(DetallesPedidoService serv) {
+    public DetallesPedidoController(DetallesPedidoService serv, ReconstructMiddleware reconstruct) {
         this.serv = serv;
+        this.reconstruct = reconstruct;
     }
 
     @Override

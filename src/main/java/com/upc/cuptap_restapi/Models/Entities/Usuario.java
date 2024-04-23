@@ -80,9 +80,9 @@ public class Usuario implements CrudEntity {
     }
 
     @Override
-    public UpdateEntity cloneEntity() {
+    public Usuario clone() {
         try {
-            return (Usuario) this.clone();
+            return (Usuario) super.clone();
         } catch (Exception e) {
             return null;
         }

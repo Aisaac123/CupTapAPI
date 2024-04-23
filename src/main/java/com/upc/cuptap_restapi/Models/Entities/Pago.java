@@ -39,9 +39,9 @@ public class Pago implements CrudEntity {
     }
 
     @Override
-    public UpdateEntity cloneEntity() {
+    public UpdateEntity clone() {
         try {
-            return (Pago) this.clone();
+            return (Pago) super.clone();
         } catch (Exception e) {
             return null;
         }

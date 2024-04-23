@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Usuario}
+ * IDTO for {@link com.upc.cuptap_restapi.Models.Entities.Usuario}
  */
 public record UsuarioLazy(UUID id, String cedula, String nombre, String apellidos, String telefono,
                           String username,

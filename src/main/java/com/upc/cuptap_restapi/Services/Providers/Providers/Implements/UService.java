@@ -36,7 +36,7 @@ public class UService<E extends UpdateEntity, ID extends Comparable<ID>> impleme
             Optional<E> option_old = repository.findById(old_id);
             if (option_old.isPresent()) {
                 E ent = option_old.get();
-                E oldEnt = (E) ent.cloneEntity();
+                E oldEnt = (E) ent.clone();
                 ent.update(entity);
                 HashMap<String, E> map = new HashMap<>();
                 map.put("old", oldEnt);

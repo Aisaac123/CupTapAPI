@@ -11,7 +11,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
 
 /**
- * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Combo}
+ * IDTO for {@link com.upc.cuptap_restapi.Models.Entities.Combo}
  */
 
 

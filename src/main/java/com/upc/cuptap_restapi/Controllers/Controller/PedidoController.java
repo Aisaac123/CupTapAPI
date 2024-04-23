@@ -33,11 +33,12 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
 
     final
     PedidoService serv;
-    @Autowired
+    final
     ReconstructMiddleware reconstruct;
 
-    public PedidoController(PedidoService serv) {
+    public PedidoController(PedidoService serv, ReconstructMiddleware reconstruct) {
         this.serv = serv;
+        this.reconstruct = reconstruct;
     }
 
     @Override

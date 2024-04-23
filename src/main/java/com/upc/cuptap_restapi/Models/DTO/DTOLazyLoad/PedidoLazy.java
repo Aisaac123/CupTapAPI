@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Pedido}
+ * IDTO for {@link com.upc.cuptap_restapi.Models.Entities.Pedido}
  */
 public record PedidoLazy(Long id, LocalDateTime fechaRegistro, double total, Usuario usuario,
                          Estado estado) implements Serializable, LazyDTO<Pedido> {
     /**
-     * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Usuario}
+     * IDTO for {@link com.upc.cuptap_restapi.Models.Entities.Usuario}
      */
 
 
@@ -22,7 +22,7 @@ public record PedidoLazy(Long id, LocalDateTime fechaRegistro, double total, Usu
     }
 
     /**
-     * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Estado}
+     * IDTO for {@link com.upc.cuptap_restapi.Models.Entities.Estado}
      */
     public record Estado(String Nombre, String Descripcion) implements Serializable {
     }
