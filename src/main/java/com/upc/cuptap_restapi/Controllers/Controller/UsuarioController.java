@@ -4,8 +4,7 @@ import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
 import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CControllerInstance;
 import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.RControllerInstance;
-import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoAndDetallesRequest;
-import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoAndDetallesRequestNoId;
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoRequestNoCedula;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.UsuarioRequest;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Entities.Usuario;
@@ -13,8 +12,8 @@ import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
 import com.upc.cuptap_restapi.Services.Logic.PedidoService;
 import com.upc.cuptap_restapi.Services.Logic.UsuarioService;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructMiddleware;
-import com.upc.cuptap_restapi.Services.Middlewares.Validations.Requests.PedidoRequestValidation;
+import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
+import com.upc.cuptap_restapi.Services.Middlewares.Validations.Requests.PedidoRequestValidations;
 import com.upc.cuptap_restapi.Services.Utils.Options.ReadingOptions;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,9 +43,10 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
     PedidoService pedidoServ;
     private final UsuarioService serv;
     final
-    ReconstructMiddleware reconstruct;
+    ReconstructRequest reconstruct;
 
-    public UsuarioController(UsuarioService usuarioService, PedidoService pedidoServ, ReconstructMiddleware reconstruct) {
+
+    public UsuarioController(UsuarioService usuarioService, PedidoService pedidoServ, ReconstructRequest reconstruct) {
         serv = usuarioService;
         this.pedidoServ = pedidoServ;
         this.reconstruct = reconstruct;
@@ -92,7 +92,7 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
 
 
     @PutMapping("/{cedula}")
-    @Operation(summary = "Permite actualizar los datos del Usuario por medio de su cedula")
+    @Operation(summary = "Permite actualizar los datos del UsuarioDTOPedidoRequest por medio de su cedula")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se actualizo correctamente los datos del usuario"),
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
@@ -110,7 +110,7 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
     }
 
     @DeleteMapping("/{cedula}")
-    @Operation(summary = "Permite eliminar Usuario por ID")
+    @Operation(summary = "Permite eliminar UsuarioDTOPedidoRequest por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se eliminó correctamente al usuario"),
             @ApiResponse(responseCode = "404", description = "No se encontro el usuario por cedula", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
@@ -170,16 +170,9 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
             @ApiResponse(responseCode = "404", description = "No se encontro el usuario por cedula", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Pedido>> AddPedidos(@RequestBody PedidoAndDetallesRequestNoId pedidoDTO, @PathVariable String cedula) {
+    public ResponseEntity<Response<Pedido>> AddPedidos(@RequestBody PedidoRequestNoCedula pedidoDTO, @PathVariable String cedula) {
         try {
-            for (var item : pedidoDTO.detalles()) {
-                if (!PedidoRequestValidation.Validate(item))
-                    return new ResponseEntity<>(ResponseBuilder
-                            .Fail("hay elementos que tienen un producto y un combo a la vez, por favor revisa la inconsistencia"),
-                            HttpStatus.BAD_REQUEST);
-            }
-            PedidoAndDetallesRequest pedidoRequest = new PedidoAndDetallesRequest(cedula, pedidoDTO.detalles(), pedidoDTO.estadoNombre());
-            var response = serv.AddPedidoToUsuario(pedidoRequest);
+            var response = serv.AddPedidoToUsuario(pedidoDTO, cedula);
             HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(response, status);
         } catch (Exception e) {

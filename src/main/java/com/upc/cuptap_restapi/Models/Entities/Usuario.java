@@ -3,7 +3,6 @@ package com.upc.cuptap_restapi.Models.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.UsuarioLazy;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
-import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
 import com.upc.cuptap_restapi.Models.Utils.NoUpdate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,7 +54,7 @@ public class Usuario implements CrudEntity {
     @Setter
     @NoUpdate
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    List<Pedido> pedidos;
+    List<Pedido> pedidos = new ArrayList<>();
 
 
     @NoUpdate

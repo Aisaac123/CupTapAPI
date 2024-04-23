@@ -19,7 +19,7 @@ public class ResponseBuilder<T> extends Response<T> {
     }
 
     public static <T> Response<T> Success(String succes) {
-        return (Response<T>) new ResponseBuilder().withMsg(succes).withSuccess(false);
+        return (Response<T>) new ResponseBuilder().withMsg(succes).withSuccess(true);
     }
 
     public static <T> Response<T> Success() {

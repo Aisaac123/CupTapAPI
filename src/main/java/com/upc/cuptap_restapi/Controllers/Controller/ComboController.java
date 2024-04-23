@@ -9,14 +9,13 @@ import com.upc.cuptap_restapi.Models.DTO.DTORequest.ComboRequest;
 import com.upc.cuptap_restapi.Models.Entities.Combo;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Services.Logic.ComboService;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructMiddleware;
+import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,9 +31,9 @@ public class ComboController implements CRUDControllerInstance<Combo, String> {
     ComboService serv;
 
     final
-    ReconstructMiddleware reconstruct;
+    ReconstructRequest reconstruct;
 
-    public ComboController(ComboService serv, ReconstructMiddleware reconstruct) {
+    public ComboController(ComboService serv, ReconstructRequest reconstruct) {
         this.serv = serv;
         this.reconstruct = reconstruct;
     }

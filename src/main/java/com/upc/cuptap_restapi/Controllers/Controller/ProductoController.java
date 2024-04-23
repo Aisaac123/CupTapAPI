@@ -10,14 +10,13 @@ import com.upc.cuptap_restapi.Models.DTO.DTORequest.ProductoRequest;
 import com.upc.cuptap_restapi.Models.Entities.Producto;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Services.Logic.ProductoService;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructMiddleware;
+import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +32,9 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
     final
     ProductoService serv;
     final
-    ReconstructMiddleware reconstruct;
+    ReconstructRequest reconstruct;
 
-    public ProductoController(ProductoService serv, ReconstructMiddleware reconstruct) {
+    public ProductoController(ProductoService serv, ReconstructRequest reconstruct) {
         this.serv = serv;
         this.reconstruct = reconstruct;
     }

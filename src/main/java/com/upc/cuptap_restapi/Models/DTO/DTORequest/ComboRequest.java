@@ -1,30 +1,30 @@
 package com.upc.cuptap_restapi.Models.DTO.DTORequest;
 
 import com.upc.cuptap_restapi.Models.Entities.Combo;
-import com.upc.cuptap_restapi.Models.Entities.Promocion;
 import com.upc.cuptap_restapi.Models.Interfaces.DTO.RequestDTO;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.*;
 
 import java.io.Serializable;
 
 /**
- * IDTO for {@link com.upc.cuptap_restapi.Models.Entities.Combo}
+ * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Combo}
  */
+public record ComboRequest(@NotNull @NotEmpty @NotBlank String nombre, @NotEmpty @NotBlank String descripcion,
+                           @Positive double precio, @PositiveOrZero int stock, boolean ventaActiva,
+                           PromocionDTOComboRequest promocion) implements Serializable, RequestDTO<Combo> {
 
 
-public record ComboRequest(@NotNull @NotEmpty @NotBlank String nombre, String descripcion,
-                           @NotNull @PositiveOrZero double precio,
-                           @PositiveOrZero int stock, boolean venta_activa, Long promocionId)
-
-        implements Serializable, RequestDTO<Combo> {
     @Override
     public Combo toEntity() {
-        if (promocionId == null) return new Combo(nombre, descripcion, precio, stock, venta_activa);
+        if (promocion == null || promocion.id == null)
+            return new Combo(nombre, descripcion, precio, stock, ventaActiva);
 
-        return new Combo(nombre, descripcion, precio, stock, venta_activa, new Promocion(promocionId));
+        return new Combo(nombre, descripcion, precio, stock, ventaActiva, new com.upc.cuptap_restapi.Models.Entities.Promocion(promocion().id()));
+    }
+
+    /**
+     * DTO for {@link com.upc.cuptap_restapi.Models.Entities.Promocion}
+     */
+    public record PromocionDTOComboRequest(@NotNull @Positive Long id) implements Serializable {
     }
 }
-

@@ -9,19 +9,17 @@ import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDContr
 import com.upc.cuptap_restapi.Models.Entities.DetallesPedido;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Services.Logic.DetallesPedidoService;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructMiddleware;
+import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/detalles")
@@ -30,9 +28,9 @@ public class DetallesPedidoController implements CRUDControllerInstance<Detalles
     final
     DetallesPedidoService serv;
     final
-    ReconstructMiddleware reconstruct;
+    ReconstructRequest reconstruct;
 
-    public DetallesPedidoController(DetallesPedidoService serv, ReconstructMiddleware reconstruct) {
+    public DetallesPedidoController(DetallesPedidoService serv, ReconstructRequest reconstruct) {
         this.serv = serv;
         this.reconstruct = reconstruct;
     }

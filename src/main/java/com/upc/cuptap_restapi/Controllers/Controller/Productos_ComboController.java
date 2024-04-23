@@ -10,14 +10,13 @@ import com.upc.cuptap_restapi.Models.Entities.Productos_Combo;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
 import com.upc.cuptap_restapi.Services.Logic.Productos_ComboService;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructMiddleware;
+import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +32,9 @@ public class Productos_ComboController implements
     final
     Productos_ComboService serv;
     final
-    ReconstructMiddleware reconstruct;
+    ReconstructRequest reconstruct;
 
-    public Productos_ComboController(Productos_ComboService serv, ReconstructMiddleware reconstruct) {
+    public Productos_ComboController(Productos_ComboService serv, ReconstructRequest reconstruct) {
         this.serv = serv;
         this.reconstruct = reconstruct;
     }

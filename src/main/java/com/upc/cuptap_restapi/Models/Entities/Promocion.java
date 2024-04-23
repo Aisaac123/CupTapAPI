@@ -3,7 +3,6 @@ package com.upc.cuptap_restapi.Models.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.PromocionLazy;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
-import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
 import com.upc.cuptap_restapi.Models.Utils.NoUpdate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -6,19 +6,17 @@ import com.upc.cuptap_restapi.Controllers.Providers.Providers.DController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
 import com.upc.cuptap_restapi.Controllers.Providers.Providers.UController;
 import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
-import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoAndDetallesRequest;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoRequest;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Services.Logic.PedidoService;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructMiddleware;
+import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,9 +32,9 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
     final
     PedidoService serv;
     final
-    ReconstructMiddleware reconstruct;
+    ReconstructRequest reconstruct;
 
-    public PedidoController(PedidoService serv, ReconstructMiddleware reconstruct) {
+    public PedidoController(PedidoService serv, ReconstructRequest reconstruct) {
         this.serv = serv;
         this.reconstruct = reconstruct;
     }
@@ -93,9 +91,9 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Pedido>> Save(@RequestBody PedidoAndDetallesRequest entity) {
+    public ResponseEntity<Response<Pedido>> Save(@RequestBody PedidoRequest entity) {
 
-        return Persist().Save(reconstruct.reconstruct(entity));
+        return Persist().Save(reconstruct.reconstruct(entity.toEntity()));
     }
 
     @PutMapping("/{id}")
@@ -107,7 +105,7 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Pedido>>> Update(@PathVariable Long id, @RequestBody PedidoRequest new_entity) {
-        return Modify().Update(reconstruct.reconstruct(new_entity), id);
+        return Modify().Update(reconstruct.reconstruct(new_entity.toEntity()), id);
     }
 
     @DeleteMapping("/{id}")

@@ -34,8 +34,8 @@ public class CService<E extends CreateEntity, ID extends Comparable<ID>> impleme
     @Override
     public Response<E> Save(E entity) {
         try {
-            E data = repository.save(entity);
-            return new ResponseBuilder<E>().withData(data);
+            repository.save(entity);
+            return ResponseBuilder.Success("Se ha registrado con exito!");
         } catch (Exception e) {
             return ResponseBuilder.Error(e);
         }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.PedidoLazy;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
-import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
 import com.upc.cuptap_restapi.Models.Utils.NoUpdate;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
@@ -93,6 +92,7 @@ public class Pedido implements CrudEntity {
         this.usuario = usuario;
         this.estado = estado;
     }
+
 
     // Metodos
 

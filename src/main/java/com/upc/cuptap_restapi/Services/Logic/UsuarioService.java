@@ -1,14 +1,15 @@
 package com.upc.cuptap_restapi.Services.Logic;
 
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.UsuarioLazy;
-import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoAndDetallesRequest;
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoRequest;
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoRequestNoCedula;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Entities.Usuario;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
 import com.upc.cuptap_restapi.Repositories.DAO.PedidoDAO;
 import com.upc.cuptap_restapi.Repositories.DAO.UsuarioDAO;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructMiddleware;
+import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.CService;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.DService;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.RService;
@@ -28,10 +29,10 @@ public class UsuarioService implements CRUDServiceInstance<Usuario, UUID> {
     final
     PedidoDAO pedidoDAO;
     final
-    ReconstructMiddleware reconstruct;
+    ReconstructRequest reconstruct;
     private final UsuarioDAO rep;
 
-    public UsuarioService(UsuarioDAO repository, PedidoDAO pedidoDAO, PedidoService pedidoService, ReconstructMiddleware reconstruct) {
+    public UsuarioService(UsuarioDAO repository, PedidoDAO pedidoDAO, PedidoService pedidoService, ReconstructRequest reconstruct) {
         rep = repository;
         this.pedidoDAO = pedidoDAO;
         this.pedidoService = pedidoService;
@@ -130,15 +131,29 @@ public class UsuarioService implements CRUDServiceInstance<Usuario, UUID> {
         }
     }
 
-    public Response<Pedido> AddPedidoToUsuario(PedidoAndDetallesRequest pedidoDTO) {
+    public Response<Pedido> AddPedidoToUsuario(PedidoRequest pedidoDTO) {
         try {
-            Usuario user = rep.findByCedula(pedidoDTO.usuarioCedula());
+            Usuario user = rep.findByCedula(pedidoDTO.usuario().cedula());
             if (user == null) return ResponseBuilder.Fail("No se ha encontrado el usuario por su cedula");
             var pedido = reconstruct.reconstruct(pedidoDTO, user);
             user.addPedido(pedido);
             rep.save(user);
 
             return new ResponseBuilder<Pedido>().withSuccess(true).withData(pedido);
+        } catch (Exception e) {
+            return ResponseBuilder.Error(e);
+        }
+    }
+
+    public Response<Pedido> AddPedidoToUsuario(PedidoRequestNoCedula pedidoDTO, String cedula) {
+        try {
+            Usuario user = rep.findByCedula(cedula);
+            if (user == null) return ResponseBuilder.Fail("No se ha encontrado el usuario por su cedula");
+            var pedido = reconstruct.reconstruct(pedidoDTO, user);
+            user.addPedido(pedido);
+            rep.save(user);
+
+            return ResponseBuilder.Success("Se ha registrado con exito el pedido del usuario: " + user.getCedula());
         } catch (Exception e) {
             return ResponseBuilder.Error(e);
         }

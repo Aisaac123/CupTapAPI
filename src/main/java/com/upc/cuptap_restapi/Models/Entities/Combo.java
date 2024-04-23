@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.ComboLazy;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
-import com.upc.cuptap_restapi.Models.Interfaces.Entities.UpdateEntity;
 import com.upc.cuptap_restapi.Models.Utils.NoUpdate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -85,7 +84,8 @@ public class Combo implements CrudEntity {
             return (Combo) super.clone();
         } catch (Exception e) {
             return null;
-        }    }
+        }
+    }
 
     @Override
     public ComboLazy toLazy() {
