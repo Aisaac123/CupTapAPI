@@ -13,7 +13,6 @@ import java.util.Set;
 public class ReconstructRequest {
 
     final UsuarioDAO usuarioDAO;
-    private final EstadoDAO estadoDAO;
     private final ProductoDAO productoDAO;
     private final ComboDAO comboDAO;
     private final PromocionDAO promocionDAO;
@@ -21,14 +20,12 @@ public class ReconstructRequest {
     private final DetallesPedidoDAO detallesPedidoDAO;
 
     public ReconstructRequest(UsuarioDAO usuarioDAO,
-                              EstadoDAO estadoDAO,
                               ProductoDAO productoDAO,
                               ComboDAO comboDAO,
                               PromocionDAO promocionDAO,
                               PedidoDAO pedidoDAO,
                               DetallesPedidoDAO detallesPedidoDAO) {
         this.usuarioDAO = usuarioDAO;
-        this.estadoDAO = estadoDAO;
         this.productoDAO = productoDAO;
         this.comboDAO = comboDAO;
         this.promocionDAO = promocionDAO;
