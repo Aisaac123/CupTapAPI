@@ -52,26 +52,29 @@ public class Producto implements CrudEntity {
     @Lob
     byte[] imagen;
 
-    public Producto(String nombre, String descripcion, double precio, int stock, boolean venta_activa, Promocion promocion) {
+    public Producto(String nombre, String descripcion, double precio, int stock, boolean venta_activa, Promocion promocion, byte[] imagen) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.stock = stock;
         this.venta_activa = venta_activa;
         this.promocion = promocion;
+        this.imagen = imagen;
     }
 
     public Producto(String nombre) {
         this.nombre = nombre;
     }
 
-    public Producto(String nombre, String descripcion, double precio, int stock, boolean venta_activa) {
+    public Producto(String nombre, String descripcion, double precio, int stock, boolean venta_activa, byte[] imagen) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.stock = stock;
         this.venta_activa = venta_activa;
+        this.imagen = imagen;
     }
+
 
     @Override
     public Producto clone() {

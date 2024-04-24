@@ -2,6 +2,7 @@ package com.upc.cuptap_restapi.Models.DTO.DTORequest;
 
 import com.upc.cuptap_restapi.Models.Entities.Producto;
 import com.upc.cuptap_restapi.Models.Interfaces.DTO.RequestDTO;
+import jakarta.persistence.Lob;
 import jakarta.validation.constraints.*;
 
 import java.io.Serializable;
@@ -11,13 +12,13 @@ import java.io.Serializable;
  */
 public record ProductoRequest(@NotNull @NotEmpty @NotBlank String nombre, @NotEmpty @NotBlank String descripcion,
                               @Positive double precio, @PositiveOrZero int stock, boolean ventaActiva,
-                              @NotNull PromocionDTOProducto promocion) implements Serializable, RequestDTO<Producto> {
+                              @NotNull PromocionDTOProducto promocion, @Lob byte[] imagen) implements Serializable, RequestDTO<Producto> {
     @Override
     public Producto toEntity() {
         if (promocion == null || promocion.id == null)
-            return new Producto(nombre, descripcion, precio, stock, ventaActiva);
+            return new Producto(nombre, descripcion, precio, stock, ventaActiva, imagen);
 
-        return new Producto(nombre, descripcion, precio, stock, ventaActiva, new com.upc.cuptap_restapi.Models.Entities.Promocion(promocion.id()));
+        return new Producto(nombre, descripcion, precio, stock, ventaActiva, new com.upc.cuptap_restapi.Models.Entities.Promocion(promocion.id()), imagen);
     }
 
     /**
