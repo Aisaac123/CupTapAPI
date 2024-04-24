@@ -22,7 +22,6 @@ import java.util.UUID;
 public class Usuario implements CrudEntity {
 
     @Id
-    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
 
