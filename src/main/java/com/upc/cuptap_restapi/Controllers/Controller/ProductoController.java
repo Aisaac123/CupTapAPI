@@ -88,8 +88,7 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
     }
 
     @PostMapping("")
-    @Operation(summary = "Permite registrar productos",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(schema = @Schema(implementation = ProductoRequest.class),
+    @Operation(summary = "Permite registrar productos", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(schema = @Schema(implementation = ProductoRequest.class),
                     examples = {@ExampleObject(value = "{\"nombre\": \"string\", \"descripcion\": \"string\", \"precio\": 0.1, \"stock\": 100, \"ventaActiva\": true, \"promocion\": {\"id\": 1}, \"imagen\": [\"dato de tipo ByteArray\"]}")})))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se agregó correctamente al producto"),
