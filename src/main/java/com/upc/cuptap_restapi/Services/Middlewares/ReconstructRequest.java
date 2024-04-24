@@ -63,7 +63,7 @@ public class ReconstructRequest {
             if (detalle.getProducto() != null && detalle.getProducto().getNombre() != null) {
                 detalle.setCombo(null);
                 if (!detallesPedidoDAO.HasStockForPedido(detalle.getCantidad())) try {
-                    throw new Exception("No hay suficiente productos en stock de: " + detalle.getProducto().getNombre() + "para este pedido");
+                    throw new Exception("No hay suficiente productos en stock de: " + detalle.getProducto().getNombre() + " para este pedido");
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -71,7 +71,7 @@ public class ReconstructRequest {
             else if (detalle.getCombo() != null && detalle.getCombo().getNombre() != null) {
                 detalle.setPedido(null);
                 if (!detallesPedidoDAO.HasStockForCombos(detalle.getCantidad())) try {
-                    throw new Exception("No hay suficiente combos en stock de: " + detalle.getProducto().getNombre()+ "para este pedido");
+                    throw new Exception("No hay suficiente combos en stock de: " + detalle.getProducto().getNombre()+ " para este pedido");
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
