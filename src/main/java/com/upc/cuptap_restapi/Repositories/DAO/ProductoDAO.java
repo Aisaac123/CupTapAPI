@@ -3,6 +3,7 @@ package com.upc.cuptap_restapi.Repositories.DAO;
 import com.upc.cuptap_restapi.Models.Entities.DetallesPedido;
 import com.upc.cuptap_restapi.Models.Entities.Producto;
 import com.upc.cuptap_restapi.Repositories.Repository.GlobalRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -23,4 +24,10 @@ public interface ProductoDAO extends GlobalRepository<Producto, String> {
         Set<String> ids = detallles.stream().map(DetallesPedido::getProducto).map(Producto::getNombre).collect(Collectors.toSet());
         return findByIds(ids);
     }
+    @Modifying
+    @Query("UPDATE Productos p SET p.stock = :newQuantity WHERE p.nombre = :nombre")
+    void updateProductoCantidad(@Param("nombre") String nombre, @Param("newQuantity") Integer newQuantity);
+    @Modifying
+    @Query("UPDATE Productos p SET p.stock = p.stock + :addQuantity WHERE p.nombre = :nombre")
+    void sumProductoCantidad(@Param("nombre") String nombre, @Param("addQuantity") Integer addQuantity);
 }

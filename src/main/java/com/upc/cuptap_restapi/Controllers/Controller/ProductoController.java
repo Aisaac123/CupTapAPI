@@ -13,10 +13,12 @@ import com.upc.cuptap_restapi.Services.Logic.ProductoService;
 import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,15 +62,15 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
     }
 
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Consulta productos por su ID")
+    @GetMapping("/{nombre}")
+    @Operation(summary = "Consulta productos por su nombre")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Muestra los datos del producto correspondiente"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el producto por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro el producto por nombre", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Producto>> GetById(@PathVariable String id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
-        return Read().GetById(id, isLazy);
+    public ResponseEntity<Response<Producto>> GetById(@PathVariable String nombre, @RequestParam(value = "lazy", required = false) boolean isLazy) {
+        return Read().GetById(nombre, isLazy);
     }
 
     @GetMapping("")
@@ -96,29 +98,57 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
         return Persist().Save(reconstruct.reconstruct(producto));
     }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "Permite actualizar los datos del producto por medio de su ID")
+    @PutMapping("/{nombre}")
+    @Operation(summary = "Permite actualizar los datos del producto por medio de su nombre")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se actualizo correctamente los datos del producto"),
             @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))}),
-            @ApiResponse(responseCode = "404", description = "No se encontro el producto por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro el producto por nombre", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Map<String, Producto>>> Update(@PathVariable String id, @RequestBody ProductoRequest new_producto) {
-        return Modify().Update(reconstruct.reconstruct(new_producto), id);
+    public ResponseEntity<Response<Map<String, Producto>>> Update(@PathVariable String nombre, @RequestBody ProductoRequest new_producto) {
+        return Modify().Update(reconstruct.reconstruct(new_producto), nombre);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Permite eliminar productos por ID")
+    @DeleteMapping("/{nombre}")
+    @Operation(summary = "Permite eliminar productos por nombre")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se eliminó correctamente al producto"),
-            @ApiResponse(responseCode = "404", description = "No se encontro el producto por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "404", description = "No se encontro el producto por nombre", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Producto>> Delete(@PathVariable String id) {
-        return Remove().Delete(id);
+    public ResponseEntity<Response<Producto>> Delete(@PathVariable String nombre) {
+        return Remove().Delete(nombre);
     }
 
     // TODO Controladores especificos
+
+    @PatchMapping("/{nombre}/cantidad/{cantidad}")
+    @Operation(summary = "Permite actualizar los la cantidad en stock del producto por medio de su nombre")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Se actualizó correctamete la cantidad en stock del producto "),
+            @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))})
+    })
+
+    public ResponseEntity<Response> UpdateStock(@PathVariable String nombre,
+                                                @PathVariable int cantidad,
+                                                @RequestParam(required = false, name = "operation", defaultValue = "update") String operation) {
+        var res = serv.UpdateStock(nombre, cantidad, operation);
+        var code = res.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(res, code);
+    }
+    @PatchMapping("/{nombre}/cantidad")
+    @Operation(summary = "Permite actualizar los la cantidad en stock del varios productos a la vez",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(schema = @Schema(implementation = Map.class),
+                    examples = {@ExampleObject(value = "{\"example_ProductoNombre1\": 100, \"example_ProductoNombre2\": 50}")})))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Se actualizó correctamete la cantidad en stock de todos los productos "),
+            @ApiResponse(responseCode = "400", description = "Peticion incorrecta (JSON invalido)", content = {@Content(schema = @Schema(implementation = Response.Doc.BadRequest.class))})
+    })
+    public ResponseEntity<Response> UpdateStock(Map<String, Integer> requests) {
+        var res = serv.UpdateStock(requests);
+        var code = res.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(res, code);
+    }
 
 }
