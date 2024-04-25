@@ -28,12 +28,10 @@ import java.util.Map;
 public class PromocionController implements CRUDControllerInstance<Promocion, Long> {
     final
     PromocionService serv;
-    final
-    ReconstructRequest reconstruct;
 
-    public PromocionController(PromocionService serv, ReconstructRequest reconstruct) {
+
+    public PromocionController(PromocionService serv) {
         this.serv = serv;
-        this.reconstruct = reconstruct;
     }
 
     @Override
@@ -89,7 +87,7 @@ public class PromocionController implements CRUDControllerInstance<Promocion, Lo
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Promocion>> Save(@RequestBody PromocionRequest entity) {
-        return Persist().Save(reconstruct.reconstruct(entity));
+        return Persist().Save(serv.reconstruct(entity));
     }
 
     @PutMapping("/{id}")
@@ -101,7 +99,7 @@ public class PromocionController implements CRUDControllerInstance<Promocion, Lo
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Promocion>>> Update(@PathVariable Long id, @RequestBody PromocionRequest new_entity) {
-        return Modify().Update(reconstruct.reconstruct(new_entity), id);
+        return Modify().Update(serv.reconstruct(new_entity), id);
     }
 
     @DeleteMapping("/{id}")

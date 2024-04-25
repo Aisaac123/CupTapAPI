@@ -96,7 +96,7 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Producto>> Save(@RequestBody ProductoRequest producto) {
-        return Persist().Save(reconstruct.reconstruct(producto));
+        return Persist().Save(producto.toEntity());
     }
 
     @PutMapping("/{nombre}")
@@ -108,7 +108,7 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Producto>>> Update(@PathVariable String nombre, @RequestBody ProductoRequest new_producto) {
-        return Modify().Update(reconstruct.reconstruct(new_producto), nombre);
+        return Modify().Update(new_producto.toEntity(), nombre);
     }
 
     @DeleteMapping("/{nombre}")

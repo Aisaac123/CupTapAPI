@@ -36,6 +36,16 @@ public class DetallesPedido implements CrudEntity {
 
     @NoUpdate
     @Setter
+    @Column
+    double valor_descontado = 0.0;
+
+    @NoUpdate
+    @Setter
+    @Column
+    String promocion_aplicada;
+
+    @NoUpdate
+    @Setter
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "pedido_id")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -58,6 +68,7 @@ public class DetallesPedido implements CrudEntity {
     LocalDateTime fechaRegistro = LocalDateTime.now();
 
     public DetallesPedido(int cantidad, Pedido pedido, Combo combo, Producto producto) {
+        valor_descontado = 0.0;
         this.cantidad = cantidad;
         this.pedido = pedido;
         this.combo = combo;
@@ -68,12 +79,14 @@ public class DetallesPedido implements CrudEntity {
         this.cantidad = cantidad;
         this.combo = combo;
         this.producto = producto;
+        valor_descontado = 0.0;
     }
 
     public DetallesPedido(int cantidad, Producto producto) {
         this.cantidad = cantidad;
         this.producto = producto;
         this.pedido = new Pedido();
+        valor_descontado = 0.0;
     }
 
     @Override

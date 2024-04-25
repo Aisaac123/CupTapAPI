@@ -31,6 +31,7 @@ public class DService<E extends DeleteEnity, ID extends Comparable<ID>> implemen
     public Response<E> Delete(ID id) {
         try {
             E old = repository.findById(id).orElse(null);
+            if (old == null) return ResponseBuilder.Fail("No se ha encontrado el item a eliminar");
             repository.deleteById(id);
             return new ResponseBuilder<E>().withData(old).withMsg("Se ha eliminado exitosamente");
         } catch (Exception e) {

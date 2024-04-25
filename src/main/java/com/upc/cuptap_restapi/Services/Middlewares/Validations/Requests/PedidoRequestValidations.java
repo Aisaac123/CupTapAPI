@@ -9,11 +9,15 @@ import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
 import com.upc.cuptap_restapi.Repositories.DAO.DetallesPedidoDAO;
 import org.springframework.stereotype.Service;
 
+@Service
 public class PedidoRequestValidations {
 
+    final DetallesPedidoDAO detallesPedidoDAO;
+    public PedidoRequestValidations(DetallesPedidoDAO detallesPedidoDAO) {
+        this.detallesPedidoDAO = detallesPedidoDAO;
+    }
 
-
-    public static Response<Boolean> Validate(PedidoRequest pedido) {
+    public Response<Boolean> Validate(PedidoRequest pedido) {
         int i = 0;
         for (var item : pedido.detalles()) {
             if (item.combo() != null && item.producto() != null) return ResponseBuilder
@@ -25,7 +29,7 @@ public class PedidoRequestValidations {
         }
         return ResponseBuilder.Success();
     }
-    public static Response<Boolean> Validate(PedidoRequestNoCedula pedido) {
+    public Response<Boolean> Validate(PedidoRequestNoCedula pedido) {
         int i = 0;
         for (var item : pedido.detalles()) {
             if (item.combo() != null && item.producto() != null) return ResponseBuilder
@@ -39,7 +43,7 @@ public class PedidoRequestValidations {
         return ResponseBuilder.Success();
     }
 
-    public static Response<Boolean> Validate(PedidoRequestNoCedula.DetallesPedidoDTOPedidoRequestNoCedula item) {
+    public Response<Boolean> Validate(PedidoRequestNoCedula.DetallesPedidoDTOPedidoRequestNoCedula item) {
             if (item.combo() != null && item.producto() != null) return ResponseBuilder
                     .Fail("El detalle de la posicion posee un combo y un producto a la vez " +
                             " --Nombre del producto: " + item.producto().nombre() +" "+
@@ -47,18 +51,29 @@ public class PedidoRequestValidations {
         return ResponseBuilder.Success();
     }
 
-    public static Response<Boolean> Validate(PedidoRequest.DetallesPedidoDTOPedidoRequest item) {
+    public Response<Boolean> Validate(PedidoRequest.DetallesPedidoDTOPedidoRequest item) {
         if (item.combo() != null && item.producto() != null) return ResponseBuilder
                 .Fail("El detalle posee un combo y un producto a la vez " +
                         " --Nombre del producto: " + item.producto().nombre() +" "+
                         " --Nombre del combo: " + item.combo().nombre() +" ");
         return ResponseBuilder.Success();
     }
-    public static Response<Boolean> Validate(DetallesPedido item) {
-        if (item.getCombo() != null && item.getProducto() != null) return ResponseBuilder
+    public Response<Boolean> Validate(DetallesPedido detalle) {
+        if (detalle.getCombo() != null && detalle.getProducto() != null) return ResponseBuilder
                 .Fail("El detalle posee un combo y un producto a la vez " +
-                        " --Nombre del producto: " + item.getProducto().getNombre() +" "+
-                        " --Nombre del combo: " + item.getCombo().getNombre() +" ");
+                        " --Nombre del producto: " + detalle.getProducto().getNombre() +" "+
+                        " --Nombre del combo: " + detalle.getCombo().getNombre() +" ");
+        if (detalle.getProducto() != null && detalle.getProducto().getNombre() != null) {
+            detalle.setCombo(null);
+            if (!detallesPedidoDAO.hasStockForPedido(detalle.getProducto().getNombre(), detalle.getCantidad()))
+                return ResponseBuilder.Fail("No hay suficiente productos en stock de: " + detalle.getProducto().getNombre() + " para este pedido");
+
+        }
+        else if (detalle.getCombo() != null && detalle.getCombo().getNombre() != null) {
+            detalle.setPedido(null);
+            if (!detallesPedidoDAO.hasStockForCombos(detalle.getCombo().getNombre(), detalle.getCantidad()))
+                return ResponseBuilder.Fail("No hay suficiente combos en stock de: " + detalle.getProducto().getNombre()+ " para este pedido");
+        }
         return ResponseBuilder.Success();
     }
 

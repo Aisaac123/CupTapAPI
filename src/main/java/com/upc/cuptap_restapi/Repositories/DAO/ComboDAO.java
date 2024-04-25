@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 public interface ComboDAO extends GlobalRepository<Combo, String> {
 
     @Query("SELECT c FROM Combos c WHERE c.nombre IN :nombres")
-    List<Combo> findByIds(@Param("nombres") Set<String> nombres);
+    Set<Combo> findByIds(@Param("nombres") Set<String> nombres);
 
-    default List<Combo> findByIdsByDetails(Set<DetallesPedido> detallles) {
+    default Set<Combo> findByIdsByDetails(Set<DetallesPedido> detallles) {
         Set<String> ids = detallles.stream().map(DetallesPedido::getCombo).map(Combo::getNombre).collect(Collectors.toSet());
         return findByIds(ids);
     }

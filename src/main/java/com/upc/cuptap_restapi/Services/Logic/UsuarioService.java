@@ -23,19 +23,15 @@ import java.util.*;
 
 @Service
 public class UsuarioService implements CRUDServiceInstance<Usuario, UUID> {
-
     final
-    PedidoService pedidoService;
-    final
-    PedidoDAO pedidoDAO;
+    PedidoService pedidoDAO;
     final
     ReconstructRequest reconstruct;
     private final UsuarioDAO rep;
 
-    public UsuarioService(UsuarioDAO repository, PedidoDAO pedidoDAO, PedidoService pedidoService, ReconstructRequest reconstruct) {
+    public UsuarioService(UsuarioDAO repository, PedidoService pedidoDAO, ReconstructRequest reconstruct) {
         rep = repository;
         this.pedidoDAO = pedidoDAO;
-        this.pedidoService = pedidoService;
         this.reconstruct = reconstruct;
     }
 
@@ -135,7 +131,7 @@ public class UsuarioService implements CRUDServiceInstance<Usuario, UUID> {
         try {
             Usuario user = rep.findByCedula(pedidoDTO.usuario().cedula());
             if (user == null) return ResponseBuilder.Fail("No se ha encontrado el usuario por su cedula");
-            var pedido = reconstruct.reconstruct(pedidoDTO, user);
+            var pedido = pedidoDAO.reconstruct(pedidoDTO, user);
             user.addPedido(pedido);
             rep.save(user);
 
@@ -149,7 +145,7 @@ public class UsuarioService implements CRUDServiceInstance<Usuario, UUID> {
         try {
             Usuario user = rep.findByCedula(cedula);
             if (user == null) return ResponseBuilder.Fail("No se ha encontrado el usuario por su cedula");
-            var pedido = reconstruct.reconstruct(pedidoDTO, user);
+            var pedido = pedidoDAO.reconstruct(pedidoDTO, user);
             user.addPedido(pedido);
             rep.save(user);
 

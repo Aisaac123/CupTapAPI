@@ -93,7 +93,7 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
     })
     public ResponseEntity<Response<Pedido>> Save(@RequestBody PedidoRequest entity) {
 
-        return Persist().Save(reconstruct.reconstruct(entity.toEntity()));
+        return Persist().Save(serv.reconstruct(entity.toEntity()));
     }
 
     @PutMapping("/{id}")
@@ -105,7 +105,7 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Pedido>>> Update(@PathVariable Long id, @RequestBody PedidoRequest new_entity) {
-        return Modify().Update(reconstruct.reconstruct(new_entity.toEntity()), id);
+        return Modify().Update(serv.reconstruct(new_entity.toEntity()), id);
     }
 
     @DeleteMapping("/{id}")
