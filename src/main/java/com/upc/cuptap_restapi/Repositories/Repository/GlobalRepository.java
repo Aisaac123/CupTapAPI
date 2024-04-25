@@ -19,7 +19,7 @@ import java.util.List;
 public interface GlobalRepository<T extends Entity, ID extends Comparable<ID>> extends JpaRepository<T, ID> {
 
     @Query("SELECT e FROM #{#entityName} e WHERE e.fechaRegistro >= :fecha")
-    Page<T> findAllByFechaRegistro(Pageable pageable, @Param("fecha") LocalDateTime fecha);
+    Page<T> findAllByFechaRegistroPageable(Pageable pageable, @Param("fecha") LocalDateTime fecha);
 
     @Query("SELECT e FROM #{#entityName} e WHERE e.fechaRegistro >= :fecha")
     List<T> findAllByFechaRegistro(@Param("fecha") LocalDateTime fecha);

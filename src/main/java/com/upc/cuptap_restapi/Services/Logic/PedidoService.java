@@ -4,6 +4,7 @@ import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoRequest;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoRequestNoCedula;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Entities.Usuario;
+import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Repositories.DAO.PedidoDAO;
 import com.upc.cuptap_restapi.Repositories.DAO.UsuarioDAO;
 import com.upc.cuptap_restapi.Services.Middlewares.Validations.Requests.PedidoRequestValidations;
@@ -12,6 +13,8 @@ import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.DService;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.RService;
 import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.UService;
 import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CRUDServiceInstance;
+import com.upc.cuptap_restapi.Services.Sockets.PedidoEventListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,12 +23,14 @@ public class PedidoService implements CRUDServiceInstance<Pedido, Long> {
     PedidoDAO rep;
     private final UsuarioDAO usuarioDAO;
     private final PedidoRequestValidations pedidoRequestValidations;
+    final
+    PedidoEventListener listener;
 
-
-    public PedidoService(PedidoDAO rep, UsuarioDAO usuarioDAO, PedidoRequestValidations pedidoRequestValidations) {
+    public PedidoService(PedidoDAO rep, UsuarioDAO usuarioDAO, PedidoRequestValidations pedidoRequestValidations, PedidoEventListener listener) {
         this.rep = rep;
         this.usuarioDAO = usuarioDAO;
         this.pedidoRequestValidations = pedidoRequestValidations;
+        this.listener = listener;
     }
 
     @Override
@@ -77,6 +82,14 @@ public class PedidoService implements CRUDServiceInstance<Pedido, Long> {
         });
 
         return pedido;
+    }
+
+    public Response<Pedido> Save(Pedido pedido){
+        var res = Persist().Save(pedido);
+        listener.handlePedidoSave();
+        listener.handlePedidoCreate();
+        listener.handlePedidoDelete();
+        return res;
     }
 
 }

@@ -9,19 +9,24 @@ import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDContr
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoRequest;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Utils.Response;
+import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
 import com.upc.cuptap_restapi.Services.Logic.PedidoService;
 import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
+import com.upc.cuptap_restapi.Services.Sockets.PedidoEventListener;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/v1/Pedidos")
@@ -33,10 +38,12 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
     PedidoService serv;
     final
     ReconstructRequest reconstruct;
-
-    public PedidoController(PedidoService serv, ReconstructRequest reconstruct) {
+    final
+    PedidoEventListener listener;
+    public PedidoController(PedidoService serv, ReconstructRequest reconstruct, PedidoEventListener listener) {
         this.serv = serv;
         this.reconstruct = reconstruct;
+        this.listener = listener;
     }
 
     @Override
@@ -92,8 +99,13 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Pedido>> Save(@RequestBody PedidoRequest entity) {
-
-        return Persist().Save(serv.reconstruct(entity.toEntity()));
+        try {
+            var response = serv.Save(serv.reconstruct(entity.toEntity()));
+            HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+            return new ResponseEntity<>(response, status);
+        } catch (Exception e) {
+            return new ResponseEntity<>(ResponseBuilder.Error(e), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/{id}")

@@ -115,7 +115,7 @@ public class RService<E extends ReadEntity, ID extends Comparable<ID>> implement
                         readOption.getPageParams().getIndex(),
                         readOption.getPageParams().getLimit()
                 );
-                page = repository.findAllByFechaRegistro(pageable, readOption.getDateLimit().atStartOfDay());
+                page = repository.findAllByFechaRegistroPageable(pageable, readOption.getDateLimit().atStartOfDay());
             }
             if (readOption.isLazy()) {
                 Page<LazyDTO> lazyPage = page.map(E::toLazy);
