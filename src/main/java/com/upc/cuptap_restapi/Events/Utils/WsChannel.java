@@ -1,4 +1,4 @@
-package com.upc.cuptap_restapi.Models.Utils;
+package com.upc.cuptap_restapi.Events.Utils;
 
 public enum WsChannel {
 
@@ -10,7 +10,7 @@ public enum WsChannel {
     private final String channel;
 
 
-    public String setModel(String model) {
+    public String setRoute(String model) {
         return channel + model;
     }
 }

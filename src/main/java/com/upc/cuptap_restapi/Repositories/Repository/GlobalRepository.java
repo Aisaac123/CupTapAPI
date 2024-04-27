@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * General Repository extended from {@link org.springframework.data.jpa.repository.JpaRepository}
+ *
  */
 @NoRepositoryBean
 public interface GlobalRepository<T extends Entity, ID extends Comparable<ID>> extends JpaRepository<T, ID> {
@@ -26,7 +27,7 @@ public interface GlobalRepository<T extends Entity, ID extends Comparable<ID>> e
     List<T> findAllByFechaRegistro(@Param("fecha") LocalDateTime fecha);
 
     @Query("SELECT p FROM #{#entityName} p ORDER BY p.fechaRegistro DESC LIMIT 1")
-    Pedido findLast();
+    T findLast();
 
 
     @Query("SELECT e FROM #{#entityName} e")

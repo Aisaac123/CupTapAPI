@@ -2,8 +2,10 @@ package com.upc.cuptap_restapi.Models.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.upc.cuptap_restapi.Events.Event.ProductoEventListener;
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.ProductoLazy;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.HasSocketChannel;
 import com.upc.cuptap_restapi.Models.Utils.NoUpdate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Producto implements CrudEntity {
+public class Producto implements CrudEntity, HasSocketChannel<ProductoEventListener> {
 
     @Setter
     @Id

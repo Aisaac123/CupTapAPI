@@ -38,7 +38,7 @@ public class CService<E extends CreateEntity, ID extends Comparable<ID>> impleme
         return this;
     }
 
-    public CService(GlobalRepository<E, ID> repository, PedidoEventListener listener) {
+    public CService(GlobalRepository<E, ID> repository, DataBaseEventListener listener) {
         this.repository = repository;
         this.listener = listener;
     }
@@ -48,7 +48,7 @@ public class CService<E extends CreateEntity, ID extends Comparable<ID>> impleme
         try {
             var e = repository.save(entity);
             if (entity instanceof HasSocketChannel<?> && transmit){
-                listener.handleCreate(repository.findLast());
+                listener.handleCreate(e);
                 }
             return ResponseBuilder.Success("Se ha registrado con exito!");
         } catch (Exception e) {

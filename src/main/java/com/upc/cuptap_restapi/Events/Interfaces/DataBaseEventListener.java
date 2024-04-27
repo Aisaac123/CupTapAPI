@@ -6,7 +6,7 @@ public interface DataBaseEventListener extends EventListener {
             onCreateSendToChannel(transmitionData);
     } catch (Exception ignored) {
         try {
-            sendToAllChannels(transmitionData);
+            defaultMessage(transmitionData);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -18,7 +18,7 @@ public interface DataBaseEventListener extends EventListener {
             onSaveSendToChannel(transmitionData);
     } catch (Exception ignored) {
         try {
-            sendToAllChannels(transmitionData);
+            defaultMessage(transmitionData);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -30,23 +30,17 @@ public interface DataBaseEventListener extends EventListener {
             onDeleteSendToChannel(transmitionData);
         } catch (Exception ignored) {
             try {
-                sendToAllChannels(transmitionData);
+                defaultMessage(transmitionData);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    default void onDeleteSendToChannel(Object transmitionData){
-        throw new RuntimeException("onDeleteSendToChannel not implemented.");
-    }
-    default void onSaveSendToChannel(Object transmitionData){
-        throw new RuntimeException("onSaveSendToChannel not implemented.");
-    }
-    default void onCreateSendToChannel(Object transmitionData){
-        throw new RuntimeException("onCreateSendToChannel not implemented.");
-    }
-    default void sendToAllChannels(Object transmitionData){
-        throw new RuntimeException("sendToAllChannels not implemented.");
+    void onDeleteSendToChannel(Object transmitionData);
+    void onSaveSendToChannel(Object transmitionData);
+    void onCreateSendToChannel(Object transmitionData);
+    default void defaultMessage(Object transmitionData){
+        throw new RuntimeException("defaultMessage not implemented.");
     }
 }

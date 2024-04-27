@@ -92,7 +92,7 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Producto>> Save(@RequestBody ProductoRequest producto) {
-        return Persist().Save(serv.reconstruct(producto));
+        return Persist().Save(serv.reconstruct(producto), true);
     }
 
     @PutMapping("/{nombre}")
@@ -104,7 +104,7 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Producto>>> Update(@PathVariable String nombre, @RequestBody ProductoRequest new_producto) {
-        return Modify().Update(serv.reconstruct(new_producto), nombre);
+        return Modify().Update(serv.reconstruct(new_producto), nombre, true);
     }
 
     @DeleteMapping("/{nombre}")
@@ -115,7 +115,7 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Producto>> Delete(@PathVariable String nombre) {
-        return Remove().Delete(nombre);
+        return Remove().Delete(nombre, true);
     }
 
     // TODO Controladores especificos
@@ -134,7 +134,7 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
         var code = res.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
         return new ResponseEntity<>(res, code);
     }
-    @PatchMapping("/{nombre}/cantidad")
+    @PatchMapping("/cantidad")
     @Operation(summary = "Permite actualizar los la cantidad en stock del varios productos a la vez",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(schema = @Schema(implementation = Map.class),
                     examples = {@ExampleObject(value = "{\"example_ProductoNombre1\": 100, \"example_ProductoNombre2\": 50}")})))
