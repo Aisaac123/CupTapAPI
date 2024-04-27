@@ -52,7 +52,7 @@ public class Usuario implements CrudEntity {
 
     @Setter
     @NoUpdate
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Pedido> pedidos = new ArrayList<>();
 
 

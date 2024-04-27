@@ -1,16 +1,15 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
 
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.DController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.UController;
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.CController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.DController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.RController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.UController;
+import com.upc.cuptap_restapi.Controllers.Shared.Instances.CRUDControllerInstance;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PagoRequest;
 import com.upc.cuptap_restapi.Models.Entities.Pago;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Services.Logic.PagoService;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,12 +29,9 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
 
     final
     PagoService serv;
-    final
-    ReconstructRequest reconstruct;
 
-    public PagoController(PagoService serv, ReconstructRequest reconstruct) {
+    public PagoController(PagoService serv) {
         this.serv = serv;
-        this.reconstruct = reconstruct;
     }
 
     @Override
@@ -65,7 +61,7 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
             @ApiResponse(responseCode = "404", description = "No se encontro el pago por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Pago>> GetById(@PathVariable Long id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
+    public ResponseEntity<Response> GetById(@PathVariable Long id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
         return Read().GetById(id, isLazy);
     }
 
@@ -91,7 +87,7 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Pago>> Save(@RequestBody PagoRequest entity) {
-        return Persist().Save(reconstruct.reconstruct(entity));
+        return Persist().Save(serv.reconstruct(entity));
     }
 
     @PutMapping("/{id}")
@@ -103,7 +99,7 @@ public class PagoController implements CRUDControllerInstance<Pago, Long> {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Pago>>> Update(@PathVariable Long id, @RequestBody PagoRequest new_entity) {
-        return Modify().Update(reconstruct.reconstruct(new_entity), id);
+        return Modify().Update(serv.reconstruct(new_entity), id);
     }
 
     @DeleteMapping("/{id}")

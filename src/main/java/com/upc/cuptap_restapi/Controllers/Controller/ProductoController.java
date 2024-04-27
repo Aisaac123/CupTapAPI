@@ -1,16 +1,15 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
 
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.DController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.UController;
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.CController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.DController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.RController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.UController;
+import com.upc.cuptap_restapi.Controllers.Shared.Instances.CRUDControllerInstance;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.ProductoRequest;
 import com.upc.cuptap_restapi.Models.Entities.Producto;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Services.Logic.ProductoService;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -33,12 +32,9 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
 
     final
     ProductoService serv;
-    final
-    ReconstructRequest reconstruct;
 
-    public ProductoController(ProductoService serv, ReconstructRequest reconstruct) {
+    public ProductoController(ProductoService serv) {
         this.serv = serv;
-        this.reconstruct = reconstruct;
     }
 
     @Override
@@ -69,7 +65,7 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
             @ApiResponse(responseCode = "404", description = "No se encontro el producto por nombre", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Producto>> GetById(@PathVariable String nombre, @RequestParam(value = "lazy", required = false) boolean isLazy) {
+    public ResponseEntity<Response> GetById(@PathVariable String nombre, @RequestParam(value = "lazy", required = false) boolean isLazy) {
         return Read().GetById(nombre, isLazy);
     }
 
@@ -96,7 +92,7 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Producto>> Save(@RequestBody ProductoRequest producto) {
-        return Persist().Save(producto.toEntity());
+        return Persist().Save(serv.reconstruct(producto));
     }
 
     @PutMapping("/{nombre}")
@@ -108,7 +104,7 @@ public class ProductoController implements CRUDControllerInstance<Producto, Stri
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Producto>>> Update(@PathVariable String nombre, @RequestBody ProductoRequest new_producto) {
-        return Modify().Update(new_producto.toEntity(), nombre);
+        return Modify().Update(serv.reconstruct(new_producto), nombre);
     }
 
     @DeleteMapping("/{nombre}")

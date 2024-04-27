@@ -41,7 +41,7 @@ public class Combo implements CrudEntity {
     List<Productos_Combo> productosCombos;
     @NoUpdate
     @Setter
-    @OneToMany(mappedBy = "combo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "combo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     //@JsonIgnoreProperties({"combo, producto"})
     @JsonIgnore
     List<DetallesPedido> detalles;

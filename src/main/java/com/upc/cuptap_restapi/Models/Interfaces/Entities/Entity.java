@@ -4,4 +4,9 @@ import java.time.LocalDateTime;
 
 public interface Entity {
     LocalDateTime getFechaRegistro();
+
+    default Entity NotLazy(){
+        return null;
+    }
+
 }

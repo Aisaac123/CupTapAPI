@@ -1,21 +1,26 @@
 package com.upc.cuptap_restapi.Services.Logic;
 
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.ComboRequest;
 import com.upc.cuptap_restapi.Models.Entities.Combo;
 import com.upc.cuptap_restapi.Repositories.DAO.ComboDAO;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.CService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.DService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.RService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.UService;
-import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CRUDServiceInstance;
+import com.upc.cuptap_restapi.Repositories.DAO.PromocionDAO;
+import com.upc.cuptap_restapi.Services.Shared.Implements.CService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.DService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.RService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.UService;
+import com.upc.cuptap_restapi.Services.Shared.Instances.CRUDServiceInstance;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ComboService implements CRUDServiceInstance<Combo, String> {
 
     private final ComboDAO rep;
+    private final PromocionDAO promocionDAO;
 
-    public ComboService(ComboDAO rep) {
+    public ComboService(ComboDAO rep,
+                        PromocionDAO promocionDAO) {
         this.rep = rep;
+        this.promocionDAO = promocionDAO;
     }
 
     @Override
@@ -36,6 +41,13 @@ public class ComboService implements CRUDServiceInstance<Combo, String> {
     @Override
     public UService<Combo, String> Modify() {
         return new UService<>(rep);
+    }
+
+    public Combo reconstruct(ComboRequest requestDTO) {
+        var combo = requestDTO.toEntity();
+        if (combo.getPromocion().getId() != null)
+            combo.setPromocion(promocionDAO.findById(combo.getPromocion().getId()).orElse(null));
+        return combo;
     }
 
 }

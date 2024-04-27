@@ -1,12 +1,15 @@
 package com.upc.cuptap_restapi.Models.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.PedidoLazy;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
+import com.upc.cuptap_restapi.Models.Interfaces.Entities.HasSocketChannel;
 import com.upc.cuptap_restapi.Models.Utils.NoUpdate;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
+import com.upc.cuptap_restapi.Events.Event.PedidoEventListener;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +27,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Pedido implements CrudEntity {
+public class Pedido implements CrudEntity, HasSocketChannel<PedidoEventListener> {
     @Id
     @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +39,8 @@ public class Pedido implements CrudEntity {
     LocalDateTime fechaRegistro = LocalDateTime.now();
 
     @Column(nullable = false)
+    @Setter
+    @NoUpdate
     double total;
 
     // Propiedades
@@ -60,7 +65,8 @@ public class Pedido implements CrudEntity {
 
     @Setter
     @NoUpdate
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     List<Pago> pagos;
 
     // Relaciones 1 a n
@@ -96,16 +102,6 @@ public class Pedido implements CrudEntity {
 
     // Metodos
 
-    public void addDetalles(DetallesPedido detallesPedido) {
-        detallesPedido.setPedido(this);
-        detalles.add(detallesPedido);
-    }
-
-    public void addDetalles(Set<DetallesPedido> detallesPedidos) {
-        var set = detallesPedidos.stream().peek(item -> item.setPedido(this)).collect(Collectors.toSet());
-        detalles.addAll(set);
-    }
-
     @Override
     public Pedido clone() {
         try {
@@ -113,19 +109,6 @@ public class Pedido implements CrudEntity {
         } catch (CloneNotSupportedException e) {
             return null;
         }
-    }
-
-    public Response validate() {
-        for (var item : this.getDetalles()) {
-            if (item.getCombo() == null) {
-                if (item.getProducto().getStock() < item.getCantidad())
-                    return ResponseBuilder.Fail("No hay suficiente en el stock del producto: " + item.getProducto().getNombre());
-            } else if (item.getProducto() == null) {
-                if (item.getCombo().getStock() < item.getCantidad())
-                    return ResponseBuilder.Fail("No hay suficiente en el stock del producto: " + item.getCombo().getNombre());
-            } else return ResponseBuilder.Fail("Error, hay producto y combo a la vez.");
-        }
-        return ResponseBuilder.Success();
     }
 
     @Override

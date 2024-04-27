@@ -1,15 +1,14 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.DController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.UController;
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.CController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.DController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.RController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.UController;
+import com.upc.cuptap_restapi.Controllers.Shared.Instances.CRUDControllerInstance;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.ComboRequest;
 import com.upc.cuptap_restapi.Models.Entities.Combo;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Services.Logic.ComboService;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,12 +29,10 @@ public class ComboController implements CRUDControllerInstance<Combo, String> {
     final
     ComboService serv;
 
-    final
-    ReconstructRequest reconstruct;
 
-    public ComboController(ComboService serv, ReconstructRequest reconstruct) {
+
+    public ComboController(ComboService serv) {
         this.serv = serv;
-        this.reconstruct = reconstruct;
     }
 
     @Override
@@ -65,7 +62,7 @@ public class ComboController implements CRUDControllerInstance<Combo, String> {
             @ApiResponse(responseCode = "404", description = "No se encontro el combo por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Combo>> GetById(@PathVariable String id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
+    public ResponseEntity<Response> GetById(@PathVariable String id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
         return Read().GetById(id, isLazy);
     }
 
@@ -91,7 +88,7 @@ public class ComboController implements CRUDControllerInstance<Combo, String> {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Combo>> Save(@RequestBody ComboRequest combo) {
-        return Persist().Save(reconstruct.reconstruct(combo));
+        return Persist().Save(serv.reconstruct(combo));
     }
 
     @PutMapping("/{id}")
@@ -103,7 +100,7 @@ public class ComboController implements CRUDControllerInstance<Combo, String> {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Map<String, Combo>>> Update(@PathVariable String id, @RequestBody ComboRequest new_combo) {
-        return Modify().Update(reconstruct.reconstruct(new_combo), id);
+        return Modify().Update(serv.reconstruct(new_combo), id);
     }
 
     @DeleteMapping("/{id}")

@@ -1,15 +1,14 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.DController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.UController;
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.CController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.DController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.RController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.UController;
+import com.upc.cuptap_restapi.Controllers.Shared.Instances.CRUDControllerInstance;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PromocionRequest;
 import com.upc.cuptap_restapi.Models.Entities.Promocion;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Services.Logic.PromocionService;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -61,7 +60,7 @@ public class PromocionController implements CRUDControllerInstance<Promocion, Lo
             @ApiResponse(responseCode = "404", description = "No se encontro la promocion por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Promocion>> GetById(@PathVariable Long id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
+    public ResponseEntity<Response> GetById(@PathVariable Long id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
         return Read().GetById(id, isLazy);
     }
 

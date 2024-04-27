@@ -5,8 +5,8 @@ import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
 
-public interface UpdateEntity<E> extends Cloneable, Entity {
-    E clone();
+public interface UpdateEntity extends Cloneable, Entity {
+    UpdateEntity clone();
 
 
     // Uso de AOP Para actualizar los campos de una clase excluyendo los campos con @Id

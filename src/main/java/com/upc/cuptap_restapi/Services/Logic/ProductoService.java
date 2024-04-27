@@ -1,14 +1,16 @@
 package com.upc.cuptap_restapi.Services.Logic;
 
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.ProductoRequest;
 import com.upc.cuptap_restapi.Models.Entities.Producto;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
 import com.upc.cuptap_restapi.Repositories.DAO.ProductoDAO;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.CService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.DService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.RService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.UService;
-import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CRUDServiceInstance;
+import com.upc.cuptap_restapi.Repositories.DAO.PromocionDAO;
+import com.upc.cuptap_restapi.Services.Shared.Implements.CService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.DService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.RService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.UService;
+import com.upc.cuptap_restapi.Services.Shared.Instances.CRUDServiceInstance;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,12 @@ public class ProductoService implements CRUDServiceInstance<Producto, String> {
 
     final
     ProductoDAO rep;
+    private final PromocionDAO promocionDAO;
 
-    public ProductoService(ProductoDAO rep) {
+    public ProductoService(ProductoDAO rep,
+                           PromocionDAO promocionDAO) {
         this.rep = rep;
+        this.promocionDAO = promocionDAO;
     }
 
     @Override
@@ -90,4 +95,14 @@ public class ProductoService implements CRUDServiceInstance<Producto, String> {
             return ResponseBuilder.Error(e);
         }
     }
+    /**
+     Reconstruct of {@link Producto}
+     */
+    public Producto reconstruct(ProductoRequest requestDTO) {
+        var producto = requestDTO.toEntity();
+        if (producto.getPromocion() != null && producto.getPromocion().getId() != null)
+            producto.setPromocion(promocionDAO.findById(producto.getPromocion().getId()).orElse(null));
+        return producto;
+    }
+
 }

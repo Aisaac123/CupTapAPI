@@ -46,7 +46,7 @@ public class DetallesPedido implements CrudEntity {
 
     @NoUpdate
     @Setter
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "pedido_id")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnore

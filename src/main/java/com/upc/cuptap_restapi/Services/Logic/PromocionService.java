@@ -7,17 +7,13 @@ import com.upc.cuptap_restapi.Models.Entities.Promocion;
 import com.upc.cuptap_restapi.Repositories.DAO.ComboDAO;
 import com.upc.cuptap_restapi.Repositories.DAO.ProductoDAO;
 import com.upc.cuptap_restapi.Repositories.DAO.PromocionDAO;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.CService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.DService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.RService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.UService;
-import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CRUDServiceInstance;
-import jakarta.transaction.Transactional;
-import org.springframework.data.jpa.repository.Modifying;
+import com.upc.cuptap_restapi.Services.Shared.Implements.CService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.DService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.RService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.UService;
+import com.upc.cuptap_restapi.Services.Shared.Instances.CRUDServiceInstance;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -81,4 +77,6 @@ public class PromocionService implements CRUDServiceInstance<Promocion, Long> {
         promocion.setCombos(combos);
         return promocion;
     }
+
+
 }

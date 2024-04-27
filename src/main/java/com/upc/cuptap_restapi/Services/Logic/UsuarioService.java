@@ -3,18 +3,17 @@ package com.upc.cuptap_restapi.Services.Logic;
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.UsuarioLazy;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoRequest;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoRequestNoCedula;
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.UsuarioRequest;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Entities.Usuario;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
-import com.upc.cuptap_restapi.Repositories.DAO.PedidoDAO;
 import com.upc.cuptap_restapi.Repositories.DAO.UsuarioDAO;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.CService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.DService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.RService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.UService;
-import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CRUDServiceInstance;
+import com.upc.cuptap_restapi.Services.Shared.Implements.CService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.DService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.RService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.UService;
+import com.upc.cuptap_restapi.Services.Shared.Instances.CRUDServiceInstance;
 import com.upc.cuptap_restapi.Services.Utils.Options.ParamOptions;
 import com.upc.cuptap_restapi.Services.Utils.Options.ReadingOptions;
 import org.springframework.stereotype.Service;
@@ -25,14 +24,11 @@ import java.util.*;
 public class UsuarioService implements CRUDServiceInstance<Usuario, UUID> {
     final
     PedidoService pedidoDAO;
-    final
-    ReconstructRequest reconstruct;
     private final UsuarioDAO rep;
 
-    public UsuarioService(UsuarioDAO repository, PedidoService pedidoDAO, ReconstructRequest reconstruct) {
+    public UsuarioService(UsuarioDAO repository, PedidoService pedidoDAO) {
         rep = repository;
         this.pedidoDAO = pedidoDAO;
-        this.reconstruct = reconstruct;
     }
 
     @Override
@@ -153,6 +149,13 @@ public class UsuarioService implements CRUDServiceInstance<Usuario, UUID> {
         } catch (Exception e) {
             return ResponseBuilder.Error(e);
         }
+    }
+
+    /**
+     Reconstruct of {@link Usuario}
+     */
+    public Usuario reconstruct(UsuarioRequest requestDTO) {
+        return requestDTO.toEntity();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.upc.cuptap_restapi.Repositories.Repository;
 
+import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.Entity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,10 @@ public interface GlobalRepository<T extends Entity, ID extends Comparable<ID>> e
 
     @Query("SELECT e FROM #{#entityName} e WHERE e.fechaRegistro >= :fecha")
     List<T> findAllByFechaRegistro(@Param("fecha") LocalDateTime fecha);
+
+    @Query("SELECT p FROM #{#entityName} p ORDER BY p.fechaRegistro DESC LIMIT 1")
+    Pedido findLast();
+
 
     @Query("SELECT e FROM #{#entityName} e")
     List<T> findAllLazy();

@@ -1,5 +1,6 @@
 package com.upc.cuptap_restapi.Models.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.upc.cuptap_restapi.Models.DTO.DTOLazyLoad.ProductoLazy;
 import com.upc.cuptap_restapi.Models.Interfaces.Entities.CrudEntity;
@@ -37,13 +38,14 @@ public class Producto implements CrudEntity {
     boolean venta_activa = true;
     @Setter
     @NoUpdate
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto")
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto", fetch = FetchType.LAZY)
     List<Productos_Combo> productosCombos;
     @Setter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_promocion", nullable = true)
     @JsonIgnoreProperties({"productos", "combos"})
-    Promocion promocion = null;
+    Promocion promocion;
     @NoUpdate
     @Column(nullable = false)
     LocalDateTime fechaRegistro = LocalDateTime.now();

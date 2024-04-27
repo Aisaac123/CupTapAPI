@@ -1,9 +1,9 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CControllerInstance;
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.RControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.CController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.RController;
+import com.upc.cuptap_restapi.Controllers.Shared.Instances.CControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Shared.Instances.RControllerInstance;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoRequestNoCedula;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.UsuarioRequest;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
@@ -12,8 +12,6 @@ import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
 import com.upc.cuptap_restapi.Services.Logic.PedidoService;
 import com.upc.cuptap_restapi.Services.Logic.UsuarioService;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
-import com.upc.cuptap_restapi.Services.Middlewares.Validations.Requests.PedidoRequestValidations;
 import com.upc.cuptap_restapi.Services.Utils.Options.ReadingOptions;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,7 +19,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,14 +39,11 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
     final
     PedidoService pedidoServ;
     private final UsuarioService serv;
-    final
-    ReconstructRequest reconstruct;
 
 
-    public UsuarioController(UsuarioService usuarioService, PedidoService pedidoServ, ReconstructRequest reconstruct) {
+    public UsuarioController(UsuarioService usuarioService, PedidoService pedidoServ) {
         serv = usuarioService;
         this.pedidoServ = pedidoServ;
-        this.reconstruct = reconstruct;
     }
 
     @Override
@@ -84,7 +78,7 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Usuario>> Save(@RequestBody UsuarioRequest usuario) {
-        return Persist().Save(reconstruct.reconstruct(usuario));
+        return Persist().Save(serv.reconstruct(usuario));
     }
 
 
@@ -101,7 +95,7 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
     })
     public ResponseEntity<Response<Map<String, Usuario>>> PutByCedula(@PathVariable String cedula, @RequestBody UsuarioRequest new_user, @RequestParam(value = "lazy", required = false) boolean isLazy) {
         try {
-            var response = serv.UpdateByCedula(reconstruct.reconstruct(new_user), cedula);
+            var response = serv.UpdateByCedula(serv.reconstruct(new_user), cedula);
             HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(response, status);
         } catch (Exception e) {

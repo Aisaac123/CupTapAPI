@@ -1,15 +1,18 @@
 package com.upc.cuptap_restapi.Services.Logic;
 
+import com.upc.cuptap_restapi.Models.DTO.DTORequest.Productos_ComboRequest;
 import com.upc.cuptap_restapi.Models.Entities.Productos_Combo;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
+import com.upc.cuptap_restapi.Repositories.DAO.ComboDAO;
+import com.upc.cuptap_restapi.Repositories.DAO.ProductoDAO;
 import com.upc.cuptap_restapi.Repositories.DAO.Productos_ComboDAO;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.CService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.DService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.UService;
-import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CServiceInstance;
-import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.DServiceInstance;
-import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.UServiceInstance;
+import com.upc.cuptap_restapi.Services.Shared.Implements.CService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.DService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.UService;
+import com.upc.cuptap_restapi.Services.Shared.Instances.CServiceInstance;
+import com.upc.cuptap_restapi.Services.Shared.Instances.DServiceInstance;
+import com.upc.cuptap_restapi.Services.Shared.Instances.UServiceInstance;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,9 +21,15 @@ public class Productos_ComboService implements CServiceInstance<Productos_Combo,
         UServiceInstance<Productos_Combo, Long> {
     final
     Productos_ComboDAO rep;
+    private final ComboDAO comboDAO;
+    private final ProductoDAO productoDAO;
 
-    public Productos_ComboService(Productos_ComboDAO rep) {
+    public Productos_ComboService(Productos_ComboDAO rep,
+                                  ComboDAO comboDAO,
+                                  ProductoDAO productoDAO) {
         this.rep = rep;
+        this.comboDAO = comboDAO;
+        this.productoDAO = productoDAO;
     }
 
     @Override
@@ -53,5 +62,15 @@ public class Productos_ComboService implements CServiceInstance<Productos_Combo,
         }
     }
 
+    /**
+     Reconstruct of {@link Productos_Combo}
+     */
+    public Productos_Combo reconstruct(Productos_ComboRequest requestDTO) {
+        var p_combos = requestDTO.toEntity();
 
+        p_combos.setCombo(comboDAO.findById(p_combos.getCombo().getNombre()).orElse(null));
+        p_combos.setProducto(productoDAO.findById(p_combos.getProducto().getNombre()).orElse(null));
+
+        return p_combos;
+    }
 }

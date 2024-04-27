@@ -1,32 +1,28 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
 
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.DController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.RController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.UController;
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CRUDControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.CController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.DController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.RController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.UController;
+import com.upc.cuptap_restapi.Controllers.Shared.Instances.CRUDControllerInstance;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoRequest;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Utils.Response;
-import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
 import com.upc.cuptap_restapi.Services.Logic.PedidoService;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
-import com.upc.cuptap_restapi.Services.Sockets.PedidoEventListener;
+import com.upc.cuptap_restapi.Events.Event.PedidoEventListener;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/v1/Pedidos")
@@ -37,12 +33,9 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
     final
     PedidoService serv;
     final
-    ReconstructRequest reconstruct;
-    final
     PedidoEventListener listener;
-    public PedidoController(PedidoService serv, ReconstructRequest reconstruct, PedidoEventListener listener) {
+    public PedidoController(PedidoService serv, PedidoEventListener listener) {
         this.serv = serv;
-        this.reconstruct = reconstruct;
         this.listener = listener;
     }
 
@@ -73,7 +66,7 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
             @ApiResponse(responseCode = "404", description = "No se encontro el usuario por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Pedido>> GetById(@PathVariable Long id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
+    public ResponseEntity<Response> GetById(@PathVariable Long id, @RequestParam(value = "lazy", required = false) boolean isLazy) {
         return Read().GetById(id, isLazy);
     }
 
@@ -99,16 +92,10 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Pedido>> Save(@RequestBody PedidoRequest entity) {
-        try {
-            var response = serv.Save(serv.reconstruct(entity.toEntity()));
-            HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
-            return new ResponseEntity<>(response, status);
-        } catch (Exception e) {
-            return new ResponseEntity<>(ResponseBuilder.Error(e), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return Persist().Save(serv.reconstruct(entity.toEntity()), true);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}/estado/{estado}")
     @Operation(summary = "Permite actualizar los datos del pedido por medio de su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Se actualizo correctamente los datos del pedido"),
@@ -116,8 +103,10 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
             @ApiResponse(responseCode = "404", description = "No se encontro el pedido por id", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
-    public ResponseEntity<Response<Map<String, Pedido>>> Update(@PathVariable Long id, @RequestBody PedidoRequest new_entity) {
-        return Modify().Update(serv.reconstruct(new_entity.toEntity()), id);
+    public ResponseEntity<Response> Update(@PathVariable Long id, @PathVariable String estado) {
+        var res = serv.chageEstado(estado, id);
+        var status = res.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(res, status);
     }
 
     @DeleteMapping("/{id}")
@@ -128,7 +117,7 @@ public class PedidoController implements CRUDControllerInstance<Pedido, Long> {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Pedido>> Delete(@PathVariable Long id) {
-        return Remove().Delete(id);
+        return Remove().Delete(id, true);
     }
 
     // TODO Controladores especificos

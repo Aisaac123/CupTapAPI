@@ -1,16 +1,15 @@
 package com.upc.cuptap_restapi.Controllers.Controller;
 
 
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.CController;
-import com.upc.cuptap_restapi.Controllers.Providers.Providers.DController;
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.CControllerInstance;
-import com.upc.cuptap_restapi.Controllers.Providers.ProvidersInstances.DControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.CController;
+import com.upc.cuptap_restapi.Controllers.Shared.Implements.DController;
+import com.upc.cuptap_restapi.Controllers.Shared.Instances.CControllerInstance;
+import com.upc.cuptap_restapi.Controllers.Shared.Instances.DControllerInstance;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.Productos_ComboRequest;
 import com.upc.cuptap_restapi.Models.Entities.Productos_Combo;
 import com.upc.cuptap_restapi.Models.Utils.Response;
 import com.upc.cuptap_restapi.Models.Utils.ResponseBuilder;
 import com.upc.cuptap_restapi.Services.Logic.Productos_ComboService;
-import com.upc.cuptap_restapi.Services.Middlewares.ReconstructRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,13 +30,12 @@ public class Productos_ComboController implements
 
     final
     Productos_ComboService serv;
-    final
-    ReconstructRequest reconstruct;
 
-    public Productos_ComboController(Productos_ComboService serv, ReconstructRequest reconstruct) {
+    public Productos_ComboController(Productos_ComboService serv) {
         this.serv = serv;
-        this.reconstruct = reconstruct;
     }
+
+    final
 
     @Override
     public CController<Productos_Combo, Long> Persist() {
@@ -57,7 +55,7 @@ public class Productos_ComboController implements
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
     })
     public ResponseEntity<Response<Productos_Combo>> Save(@RequestBody Productos_ComboRequest entity) {
-        return Persist().Save(reconstruct.reconstruct(entity));
+        return Persist().Save(serv.reconstruct(entity));
     }
 
     @PatchMapping("/{id}/cantidad")

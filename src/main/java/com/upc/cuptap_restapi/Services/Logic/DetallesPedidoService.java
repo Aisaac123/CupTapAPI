@@ -2,11 +2,11 @@ package com.upc.cuptap_restapi.Services.Logic;
 
 import com.upc.cuptap_restapi.Models.Entities.DetallesPedido;
 import com.upc.cuptap_restapi.Repositories.DAO.DetallesPedidoDAO;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.CService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.DService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.RService;
-import com.upc.cuptap_restapi.Services.Providers.Providers.Implements.UService;
-import com.upc.cuptap_restapi.Services.Providers.ProvidersInstances.CRUDServiceInstance;
+import com.upc.cuptap_restapi.Services.Shared.Implements.CService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.DService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.RService;
+import com.upc.cuptap_restapi.Services.Shared.Implements.UService;
+import com.upc.cuptap_restapi.Services.Shared.Instances.CRUDServiceInstance;
 import org.springframework.stereotype.Service;
 
 @Service
