@@ -157,6 +157,13 @@ public class UsuarioService implements CRUDServiceInstance<Usuario, UUID> {
     public Usuario reconstruct(UsuarioRequest requestDTO) {
         return requestDTO.toEntity();
     }
+    public boolean AuthUser(String username, String password) {
+        try {
+            return rep.existsByUsernameAndPassword(username, password);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 }
 

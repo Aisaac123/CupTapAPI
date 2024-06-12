@@ -21,6 +21,25 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.Map;
 
+/**
+ * ComboController is a REST controller which maps to "/v1/Combos" endpoint.
+ * It is responsible for handling CRUD operations on Combo objects.
+ * It implements CRUDControllerInstance interface with Combo as entity and String as key type.
+ *
+ * Each method in this controller aligns with a HTTP method:
+ * - CREATE: Save (POST)
+ * - READ: GetById (GET by id), GetAll (GET all)
+ * - UPDATE: Update (PUT by id)
+ * - DELETE: Delete (DELETE by id)
+ *
+ * HTTP response codes are provided through @ApiResponses annotations. Common response codes include 200 (OK),
+ * 400 (Bad request), 404 (Not found) and 500 (Internal Server Error).
+ *
+ * @author <ISAAC>
+ * @version 1.0
+ * @since <28-04-2024>
+ */
+
 @RestController
 @RequestMapping("/v1/Combos")
 @Tag(name = "Combos", description = "Controlador del modulo de Combos")

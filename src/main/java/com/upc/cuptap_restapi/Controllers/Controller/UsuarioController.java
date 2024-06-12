@@ -6,6 +6,7 @@ import com.upc.cuptap_restapi.Controllers.Shared.Instances.CControllerInstance;
 import com.upc.cuptap_restapi.Controllers.Shared.Instances.RControllerInstance;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.PedidoRequestNoCedula;
 import com.upc.cuptap_restapi.Models.DTO.DTORequest.UsuarioRequest;
+import com.upc.cuptap_restapi.Models.Entities.AuthModel;
 import com.upc.cuptap_restapi.Models.Entities.Pedido;
 import com.upc.cuptap_restapi.Models.Entities.Usuario;
 import com.upc.cuptap_restapi.Models.Utils.Response;
@@ -173,4 +174,22 @@ public class UsuarioController implements CControllerInstance<Usuario, UUID>, RC
             return new ResponseEntity<>(ResponseBuilder.Error(e), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/Auth")
+    @Operation(summary = "Verifica si un usuario existe")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "El usuario se encuentra en nuestros registros."),
+            @ApiResponse(responseCode = "404", description = "El usuario no se encuentra en nuestros registros", content = {@Content(schema = @Schema(implementation = Response.Doc.NotFound.class))}),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {@Content(schema = @Schema(implementation = Response.Doc.InternalServerError.class))})
+    })
+    public ResponseEntity<Boolean> verificarUsuario(@RequestBody AuthModel authModel) {
+        try {
+            boolean existeUsuario = serv.AuthUser(authModel.getUsername(), authModel.getPassword());
+            HttpStatus status = existeUsuario ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+            return new ResponseEntity<>(existeUsuario, status);
+        } catch (Exception e) {
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
