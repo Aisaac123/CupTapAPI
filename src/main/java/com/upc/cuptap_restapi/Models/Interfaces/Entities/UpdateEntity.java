@@ -23,7 +23,7 @@ public interface UpdateEntity extends Cloneable, Entity {
             field.setAccessible(true);
 
             // Si el campo está anotado con @Id o @NoUpdate, omite su actualizacion
-            if (!field.isAnnotationPresent(Id.class) || !field.isAnnotationPresent(NoUpdate.class)) continue;
+            if (field.isAnnotationPresent(Id.class) || field.isAnnotationPresent(NoUpdate.class)) continue;
 
             // Obtener el campo con el valor del nuevo objeto
             Object newValue = field.get(newObject);
