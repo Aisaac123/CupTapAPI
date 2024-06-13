@@ -53,7 +53,6 @@ public class Producto implements CrudEntity, HasSocketChannel<ProductoEventListe
     LocalDateTime fechaRegistro = LocalDateTime.now();
 
     @Setter
-    @Lob
     byte[] imagen;
 
     public Producto(String nombre, String descripcion, double precio, int stock, boolean venta_activa, Promocion promocion, byte[] imagen) {
